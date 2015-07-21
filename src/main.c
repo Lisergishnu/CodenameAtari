@@ -79,6 +79,9 @@ main(int argc, char *argv[])
 	init();
 	while (isAppRunning)
 	{
+		int thisTick = SDL_GetTicks();
+		float dt = (float) (thisTick - lastTick);
+		lastTick = thisTick;
 		switch (currentScene)
 		{
 			case APPSCENE_INTRO:
@@ -104,9 +107,6 @@ main(int argc, char *argv[])
 					}
 				}
 				handleGameInput(currentEvent);
-				int thisTick = SDL_GetTicks();
-				float dt = (float) (thisTick - lastTick);
-				lastTick = thisTick;
 				update(dt);
 				render();
 				break;
