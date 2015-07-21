@@ -3,6 +3,7 @@
  * Autor: MBT
  */
 #include <stdio.h>
+#include <SDL.h>
 #include "game.h"
 
 typedef
@@ -17,31 +18,78 @@ appscenes
 
 // Global Variables
 AppScene currentScene = APPSCENE_INTRO;
+SDL_Window *window = NULL;
+SDL_Surface *surface = NULL;
+int isGameRunning = 1;
+SDL_Event currentEvent;
 
 // Methods
 void
 init()
 {
+	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
+	{
+	    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+		exit(-1);
+	}
+	 else
+	{
+		//Create window
+		window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		if( window == NULL )
+		{
+		    printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+		}
+		else
+		{
+			//Get window surface
+			screenSurface = SDL_GetWindowSurface( window );
+			
+			//Fill the surface white
+			SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+			
+			//Update the surface
+			SDL_UpdateWindowSurface( window );
+			
+			//Wait two seconds
+			SDL_Delay( 2000 );
+		}
+	}
 }
 
 void
 shutdown()
 {
+	//Destroy window
+    SDL_DestroyWindow( window );
+
+    //Quit SDL subsystems
+    SDL_Quit();
 }
 
 int
 main(int argc, char *argv[])
 {
 	init();
-	while (1)
+	while (isAppRunning)
 	{
 		switch (currentScene)
 		{
 			case APPSCENE_INTRO:
+				//Handle events on queue
+				while( SDL_PollEvent( &currentEvent ) != 0 )
+				{
+					//User requests quit
+					if( currentEvent.type == SDL_QUIT )
+					{
+						isAppRunning = false;
+					}
+				}
+				break;
 			case APPSCENE_MAINMENU:
 			case APPSCENE_GAMEPLAY:
 			case APPSCENE_GAMEOVER:
-			break;
+				break;
 		}
 	}
 	shutdown();
