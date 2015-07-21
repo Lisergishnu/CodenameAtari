@@ -24,7 +24,14 @@ enum _defPos
 	SP_225,
 	SP_270,
 	SP_315
-} ShieldPosition;
+} Orientation;
+
+typedef
+enum __missile
+{
+	Vector position;
+	Orientation angle;
+} Missile
 
 typedef
 enum __gamescene
@@ -41,17 +48,18 @@ struct __gamestates
 	char currentLevel;
 	int currentScore;
 	Vector liftPosition;
-	ShieldPosition shieldAngle;
+	Orientation shieldAngle;
+	GameScene currentGameScene;
 } GameState;
 
 // Global variables
-
 static GameState currentGameState =
 {
 	1,
 	0,
 	{ 0,0 },
-	SP_0
+	SP_0,
+	GS_START
 };
 
 // Methods
