@@ -1,3 +1,8 @@
+/**
+ * game.h - Procesamiento logica juego
+ * Autor: MBT
+ */
+
 #ifndef __GAME_H
 #define __GAME_H
 
@@ -57,6 +62,7 @@ initGameLogic();
 void
 startNewLevel(int lvl);
 
+/* dt in milliseconds */
 void
 update(float dt);
 

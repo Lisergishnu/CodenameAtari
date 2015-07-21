@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <SDL.h>
 #include "game.h"
+#include "video.h"
 
 typedef
 enum
@@ -22,6 +23,7 @@ SDL_Window *window = NULL;
 SDL_Surface *surface = NULL;
 int isGameRunning = 1;
 SDL_Event currentEvent;
+int lastTick = 0;
 
 // Methods
 void
@@ -102,6 +104,11 @@ main(int argc, char *argv[])
 					}
 				}
 				handleGameInput(currentEvent);
+				int thisTick = SDL_GetTicks();
+				float dt = (float) (thisTick - lastTick);
+				lastTick = thisTick;
+				update(dt);
+				render();
 				break;
 			case APPSCENE_GAMEOVER:
 				break;
