@@ -38,7 +38,6 @@ update(float dt)
 	//checkCollitions
 	//assignDamages
 	//assignScores
-
 }
 
 /* This function will be called whenever there is a event to process in the game world, i.e. user input */
