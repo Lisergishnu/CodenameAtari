@@ -51,16 +51,18 @@ init()
 		else
 		{
 			//Get window surface
-			screenSurface = SDL_GetWindowSurface( window );
+			surface = SDL_GetWindowSurface( window );
 			
 			//Fill the surface white
-			SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
+			SDL_FillRect( surface, NULL, SDL_MapRGB( surface->format, 0xFF, 0xFF, 0xFF ) );
 			
 			//Update the surface
 			SDL_UpdateWindowSurface( window );
 			
 			//Wait two seconds
 			SDL_Delay( 2000 );
+			
+			initGameLogic();
 		}
 	}
 }
@@ -79,7 +81,7 @@ int
 main(int argc, char *argv[])
 {
 	init();
-	while (isAppRunning)
+	while (isGameRunning)
 	{
 		int thisTick = SDL_GetTicks();
 		float dt = (float) (thisTick - lastTick);
@@ -93,7 +95,7 @@ main(int argc, char *argv[])
 					//User requests quit
 					if( currentEvent.type == SDL_QUIT )
 					{
-						isAppRunning = false;
+						isGameRunning = 0;
 					}
 				}
 				break;
@@ -105,7 +107,7 @@ main(int argc, char *argv[])
 					//User requests quit
 					if( currentEvent.type == SDL_QUIT )
 					{
-						isAppRunning = false;
+						isGameRunning = 0;
 					}
 				}
 				handleGameInput(currentEvent);

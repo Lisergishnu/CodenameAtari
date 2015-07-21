@@ -6,11 +6,16 @@
 #ifndef __GAME_H
 #define __GAME_H
 
+#include <SDL.h>
+#include <stdio.h>
+
 // Game logic defines
-#define BOTTOM_BASE_X 400
-#define BOTTOM_BASE_Y 400
-#define TOP_BASE_X 200
-#define TOP_BASE_Y 100
+// Game space 220x192
+#define GAME_GRID_SIZE 4
+#define GAME_GRID_WIDTH 55
+#define GAME_GRID_HEIGHT 48
+
+#define MAX_MISSILE_COUNT 100
 
 #define WORLD_WIDTH 320
 #define WORLD_HEIGHT 192
@@ -23,6 +28,7 @@ struct _vectors
 	int y;
 } Vector;
 
+// Orientaciones generales
 typedef
 enum _defPos
 {
@@ -37,11 +43,12 @@ enum _defPos
 } Orientation;
 
 typedef
-enum __missile
+struct __missile
 {
+	int isAlive;
 	Vector position;
 	Orientation angle;
-} Missile
+} Missile;
 
 typedef
 enum __gamescene
@@ -55,22 +62,44 @@ enum __gamescene
 typedef
 struct __gamestates
 {
+	// Level
 	char currentLevel;
+	int onScreenMissileCount;
+	// Score
 	int currentScore;
+	int peopleRescued;
+
+	Missile missileList[MAX_MISSILE_COUNT];
+
+	Vector botBase;
+	Vector topBase;
+	
 	Vector liftPosition;
-	Orientation shieldAngle;
 	GameScene currentGameScene;
 } GameState;
 
-// Global variables
-static GameState currentGameState =
+typedef
+struct __base
 {
-	1,
-	0,
-	{ 0,0 },
-	SP_0,
-	GS_START
-};
+	SDL_Rect drawSpace;
+	Vector position;
+} Base;
+
+/* Player Stuff */
+typedef
+struct __lift
+{
+	int health;
+
+	SDL_Rect drawSpace;
+
+	Orientation orientation;
+	Vector position;
+} Lift;
+
+// Global variables
+GameState currentGameState;
+Lift lift;
 
 // Methods
 
@@ -87,5 +116,8 @@ update(float dt);
 /* This function will be called whenever there is a event to process in the game world, i.e. user input */
 void
 handleGameInput(SDL_Event e);
+
+void
+initializeMissiles(int, Missile*);
 
 #endif //__GAME.H
