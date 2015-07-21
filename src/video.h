@@ -12,12 +12,10 @@
 #include "game.h"
 
 extern GameState currentGameState;
-
+int imgFlags;
 SDL_Renderer *renderer;
 SDL_Texture *gamebkg;
 extern SDL_Window *window;
-
-SDL_Rect bkgRect = {100,0,220,192};
 
 void
 initVideo();

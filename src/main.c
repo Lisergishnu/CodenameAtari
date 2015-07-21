@@ -4,8 +4,8 @@
  */
 #include <stdio.h>
 #include <SDL.h>
-#include "game.h"
 #include "video.h"
+#include "game.h"
 
 typedef
 enum
@@ -39,8 +39,8 @@ init()
 	{
 		//Create window
 		window = SDL_CreateWindow( "Elevator Rescue",
-		 SDL_WINDOWPOS_UNDEFINED, 
-		 SDL_WINDOWPOS_UNDEFINED, 
+			SDL_WINDOWPOS_CENTERED, 
+			SDL_WINDOWPOS_CENTERED, 
 		 WORLD_WIDTH, 
 		 WORLD_HEIGHT, 
 		 SDL_WINDOW_SHOWN );
@@ -50,17 +50,17 @@ init()
 		}
 		else
 		{
-			//Get window surface
-			surface = SDL_GetWindowSurface( window );
-			
-			//Fill the surface white
-			SDL_FillRect( surface, NULL, SDL_MapRGB( surface->format, 0xFF, 0xFF, 0xFF ) );
-			
-			//Update the surface
-			SDL_UpdateWindowSurface( window );
-			
-			//Wait two seconds
-			SDL_Delay( 2000 );
+			////Get window surface
+			//surface = SDL_GetWindowSurface( window );
+			//
+			////Fill the surface white
+			//SDL_FillRect( surface, NULL, SDL_MapRGB( surface->format, 0xFF, 0xFF, 0xFF ) );
+			//
+			////Update the surface
+			//SDL_UpdateWindowSurface( window );
+			//
+			////Wait two seconds
+			//SDL_Delay( 2000 );
 			
 			initGameLogic();
 			initVideo();

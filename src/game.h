@@ -15,6 +15,11 @@
 #define GAME_GRID_WIDTH 55
 #define GAME_GRID_HEIGHT 48
 
+// Tamaños definidos en grid sizes
+#define SIZE_BASE	4;
+#define SIZE_LIFT	6;
+#define SIZE_BULLET 1;
+
 #define MAX_MISSILE_COUNT 100
 
 #define WORLD_WIDTH 320
@@ -47,7 +52,7 @@ struct __missile
 {
 	int isAlive;
 	Vector position;
-	Orientation angle;
+	Orientation orientation;
 } Missile;
 
 typedef
@@ -118,6 +123,9 @@ void
 handleGameInput(SDL_Event e);
 
 void
-initializeMissiles(int, Missile*);
+initializeMissiles();
+
+void
+updatePositions();
 
 #endif //__GAME.H

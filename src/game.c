@@ -18,13 +18,15 @@ startNewLevel(int lvl)
 	currentGameState.botBase.y = 1;
 	currentGameState.onScreenMissileCount = 10;
 
-	initializeMissiles(currentGameState.onScreenMissileCount, currentGameState.missileList);
+	initializeMissiles();
 
 	
 	lift.health = 5;
 	lift.drawSpace.x = 24;
 	lift.drawSpace.y = 24;
 	lift.orientation = SP_0;
+	lift.position.x = 50;
+	lift.position.y = 50;
 
 
 
@@ -34,7 +36,7 @@ startNewLevel(int lvl)
 void
 update(float dt)
 {
-	//updatePositions
+	updatePositions();
 	//checkCollitions
 	//assignDamages
 	//assignScores
@@ -48,12 +50,42 @@ handleGameInput(SDL_Event e)
 }
 
 void
-initializeMissiles(int amount, Missile *missiles)
+initializeMissiles()
 {
-	for(int i=0; i<amount;i++){
-		missiles[i].isAlive = 0;
-		missiles[i].position.x = 0;
-		missiles[i].position.y = 0;
-		missiles[i].angle = SP_0;
+	int i;
+	for(i=0; i<currentGameState.onScreenMissileCount;i++){
+		currentGameState.missileList[i].isAlive = 0;
+		currentGameState.missileList[i].position.x = 0;
+		currentGameState.missileList[i].position.y = 0;
+		currentGameState.missileList[i].orientation = SP_0;
 	}
+}
+
+void
+updatePositions()
+{
+	/*for(int i=0; i<currentGameState.onScreenMissileCount;i++){
+		switch(currentGameState.missileList[i].orientation){
+		case SP_0:
+			//currentGameState.missileList[i].position.x += SIZE_BULLET*GAME_GRID_SIZE;
+			//currentGameState.missileList[i].position.y = 0;
+			break;
+		case SP_45:
+			break;
+		case SP_90:
+			break;
+		case SP_135:
+			break;
+		case SP_180:
+			break;
+		case SP_225:
+			break;
+		case SP_270:
+			break;
+		case SP_315:
+			break;
+		default:
+			break;
+		}
+	}*/
 }
