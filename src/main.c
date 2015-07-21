@@ -18,7 +18,7 @@ appscenes
 } AppScene;
 
 // Global Variables
-AppScene currentScene = APPSCENE_INTRO;
+AppScene currentScene = APPSCENE_GAMEPLAY;
 SDL_Window *window = NULL;
 SDL_Surface *surface = NULL;
 int isGameRunning = 1;
@@ -63,6 +63,7 @@ init()
 			SDL_Delay( 2000 );
 			
 			initGameLogic();
+			initVideo();
 		}
 	}
 }
@@ -81,6 +82,7 @@ int
 main(int argc, char *argv[])
 {
 	init();
+	loadAssets();
 	while (isGameRunning)
 	{
 		int thisTick = SDL_GetTicks();
