@@ -31,7 +31,8 @@ init()
 {
 	if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
 	{
-	    printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+	    printf( "SDL could not initialize! SDL_Error: %s\n", 
+		SDL_GetError() );
 		exit(-1);
 	}
 	 else
@@ -40,7 +41,8 @@ init()
 		window = SDL_CreateWindow( "Elevator Rescue",
 		 SDL_WINDOWPOS_UNDEFINED, 
 		 SDL_WINDOWPOS_UNDEFINED, 
-		 320, 192, 
+		 WORLD_WIDTH, 
+		 WORLD_HEIGHT, 
 		 SDL_WINDOW_SHOWN );
 		if( window == NULL )
 		{

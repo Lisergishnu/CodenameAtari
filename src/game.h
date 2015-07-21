@@ -6,6 +6,16 @@
 #ifndef __GAME_H
 #define __GAME_H
 
+// Game logic defines
+#define BOTTOM_BASE_X 400
+#define BOTTOM_BASE_Y 400
+#define TOP_BASE_X 200
+#define TOP_BASE_Y 100
+
+#define WORLD_WIDTH 320
+#define WORLD_HEIGHT 192
+
+// Element definitions
 typedef
 struct _vectors
 {
