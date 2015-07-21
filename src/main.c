@@ -35,7 +35,11 @@ init()
 	 else
 	{
 		//Create window
-		window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		window = SDL_CreateWindow( "Elevator Rescue",
+		 SDL_WINDOWPOS_UNDEFINED, 
+		 SDL_WINDOWPOS_UNDEFINED, 
+		 320, 192, 
+		 SDL_WINDOW_SHOWN );
 		if( window == NULL )
 		{
 		    printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -88,6 +92,17 @@ main(int argc, char *argv[])
 				break;
 			case APPSCENE_MAINMENU:
 			case APPSCENE_GAMEPLAY:
+				//Handle events on queue
+				while( SDL_PollEvent( &currentEvent ) != 0 )
+				{
+					//User requests quit
+					if( currentEvent.type == SDL_QUIT )
+					{
+						isAppRunning = false;
+					}
+				}
+				handleGameInput(currentEvent);
+				break;
 			case APPSCENE_GAMEOVER:
 				break;
 		}
