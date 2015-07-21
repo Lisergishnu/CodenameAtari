@@ -3,7 +3,7 @@
  * Autor: MBT
  */
 #include <stdio.h>
-#include <SDL.h>
+#include "sdl.h"
 #include "video.h"
 #include "game.h"
 

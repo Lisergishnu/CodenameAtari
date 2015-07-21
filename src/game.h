@@ -6,7 +6,7 @@
 #ifndef __GAME_H
 #define __GAME_H
 
-#include <SDL.h>
+#include "sdl.h"
 #include <stdio.h>
 
 // Game logic defines

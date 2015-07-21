@@ -6,9 +6,7 @@
 #ifndef __VIDEO_H
 #define __VIDEO_H
 
-#include <SDL.h>
-#include <SDL_image.h>
-
+#include "sdl.h"
 #include "game.h"
 
 extern GameState currentGameState;
