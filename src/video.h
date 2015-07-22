@@ -9,7 +9,7 @@
 #include "sdl.h"
 #include "game.h"
 
-#define ASSERT_IMG(x) if(x==NULL) printf("Couldn't load image.\n");
+#define ASSERT_IMG(x) if(x==NULL) printf("Couldn't load image: %s.\n", #x);
 
 extern GameState currentGameState;
 int imgFlags;
@@ -22,7 +22,10 @@ SDL_Texture *liftTex;
 SDL_Texture *topBaseTex;
 SDL_Texture *bottomBaseTex;
 SDL_Texture *bulletTex;
-SDL_Texture *shieldTex;
+SDL_Texture *shieldLTex;
+SDL_Texture *shieldRTex;
+SDL_Texture *shieldTTex;
+SDL_Texture *shieldBTex;
 /* Game font */
 TTF_Font *font;
 

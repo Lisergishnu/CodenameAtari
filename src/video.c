@@ -6,21 +6,21 @@ SDL_Rect scoreBannerRect = {0,0,100,192};
 SDL_Rect destRect = {0,0,0,0};
 SDL_Rect liftShieldDestRect = {0,0,0,0};
 
-void
+  void
 initVideo()
 {
-	renderer = SDL_CreateRenderer(window, -1,
+  renderer = SDL_CreateRenderer(window, -1,
       SDL_RENDERER_ACCELERATED);
-	 //Initialize renderer color
-	SDL_SetRenderDrawColor( renderer, 0x00, 0x00,
+  //Initialize renderer color
+  SDL_SetRenderDrawColor( renderer, 0x00, 0x00,
       0x00, 0xFF );
 
-	//Initialize PNG loading
-	imgFlags = IMG_INIT_PNG;
-	if( !( IMG_Init( imgFlags ) & imgFlags ) )
-	{
-		printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-	}
+  //Initialize PNG loading
+  imgFlags = IMG_INIT_PNG;
+  if( !( IMG_Init( imgFlags ) & imgFlags ) )
+  {
+    printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+  }
 
   //Initialize TTF rendering
   if ( TTF_Init() == -1)
@@ -29,10 +29,10 @@ initVideo()
   }
 }
 
-void
+  void
 loadAssets()
 {
-	gamebkgMorningTex = IMG_LoadTexture(renderer,
+  gamebkgMorningTex = IMG_LoadTexture(renderer,
       "img/morning.png");
   ASSERT_IMG(gamebkgMorningTex);
   gamebkgDayTex = IMG_LoadTexture(renderer,
@@ -45,17 +45,28 @@ loadAssets()
       "res/sprites/ascensor.png");
   ASSERT_IMG(liftTex);
   topBaseTex = IMG_LoadTexture(renderer,
-      "res/sprites/base1.png");
+      "res/sprites/casetatop.png");
   ASSERT_IMG(topBaseTex);
   bottomBaseTex = IMG_LoadTexture(renderer,
-      "res/sprites/base2.png");
+      "res/sprites/casetaleft.png");
   ASSERT_IMG(bottomBaseTex);
   bulletTex = IMG_LoadTexture(renderer,
       "res/sprites/bala.png");
   ASSERT_IMG(bulletTex);
-  shieldTex = IMG_LoadTexture(renderer,
-      "res/sprites/barra.png");
-  ASSERT_IMG(shieldTex);
+
+  /* Loading shield sides */
+  shieldLTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudoleft.png");
+  ASSERT_IMG(shieldLTex);
+  shieldRTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudoright.png");
+  ASSERT_IMG(shieldRTex);
+  shieldTTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudotop.png");
+  ASSERT_IMG(shieldTTex);
+  shieldBTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudobot.png");
+  ASSERT_IMG(shieldBTex);
 
   font = TTF_OpenFont( "font/game.ttf",10);
   if (font == NULL)
@@ -68,34 +79,80 @@ PrintText(
     int y,
     char *str)
 {
- SDL_Color textColor = {255,255,255,0};
- SDL_Surface* textSurface = TTF_RenderText_Solid(
-     font,
-     str,
-     textColor);
- SDL_Texture* text = SDL_CreateTextureFromSurface(
-     renderer, textSurface);
- int textw = textSurface->w;
- int texth = textSurface->h;
- SDL_FreeSurface(textSurface);
- SDL_Rect renderQuad = {x,y,textw,texth};
- SDL_RenderCopy(renderer, text, NULL, &renderQuad);
- SDL_DestroyTexture(text);
+  SDL_Color textColor = {255,255,255,0};
+  SDL_Surface* textSurface = TTF_RenderText_Solid(
+      font,
+      str,
+      textColor);
+  SDL_Texture* text = SDL_CreateTextureFromSurface(
+      renderer, textSurface);
+  int textw = textSurface->w;
+  int texth = textSurface->h;
+  SDL_FreeSurface(textSurface);
+  SDL_Rect renderQuad = {x,y,textw,texth};
+  SDL_RenderCopy(renderer, text, NULL, &renderQuad);
+  SDL_DestroyTexture(text);
 }
 
-void
+  void
 updateAndRenderShield()
 {
+  int xPos = lift.drawSpace.x + 100;
+  int yPos = lift.drawSpace.y;
+  SDL_Texture* currentTex = NULL;
+  switch (lift.orientation) {
+    case SP_0:
+      currentTex = shieldRTex;
+      xPos += 40;
+      break;
+    case SP_90:
+      currentTex = shieldTTex;
+      yPos -= 24;
+      break;
+    case SP_180:
+      currentTex = shieldLTex;
+      xPos -= 24;
+      break;
+    case SP_270:
+      currentTex = shieldBTex;
+      yPos += 40;
+      break;
+    default:
+      currentTex = shieldRTex;
+      xPos += 40;
+  }
+
+  SDL_QueryTexture(currentTex,
+      NULL,
+      NULL,
+      & liftShieldDestRect.w,
+      & liftShieldDestRect.h);
+
+  liftShieldDestRect.x = xPos;
+  liftShieldDestRect.y = yPos;
+
+  SDL_RenderCopy(renderer, currentTex, NULL,
+      &liftShieldDestRect);
+
 }
 
-void
+  void
 render()
 {
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer,
-				gamebkgDayTex,
-				NULL,
-				&bkgRect);
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer,
+      gamebkgDayTex,
+      NULL,
+      &bkgRect);
+  /* Draw top base */
+  destRect.x = currentGameState.topBase.x;
+  destRect.y = currentGameState.topBase.y;
+  destRect.w = 24;
+  destRect.h = 24;
+  SDL_RenderCopy(renderer,
+      topBaseTex,
+      NULL,
+      &destRect);
   /* Draw lift */
   destRect = lift.drawSpace;
   destRect.x += 100;
@@ -118,22 +175,25 @@ render()
   PrintText(20,80, str);
 
   updateAndRenderShield();
-	SDL_RenderPresent(renderer);
+  SDL_RenderPresent(renderer);
 }
 
-void
+  void
 cleanUpVideo()
 {
   TTF_CloseFont(font);
-  SDL_DestroyTexture(shieldTex);
+  SDL_DestroyTexture(shieldBTex);
+  SDL_DestroyTexture(shieldTTex);
+  SDL_DestroyTexture(shieldRTex);
+  SDL_DestroyTexture(shieldLTex);
   SDL_DestroyTexture(bulletTex);
   SDL_DestroyTexture(bottomBaseTex);
   SDL_DestroyTexture(topBaseTex);
   SDL_DestroyTexture(liftTex);
-	SDL_DestroyTexture(gamebkgNightTex);
+  SDL_DestroyTexture(gamebkgNightTex);
   SDL_DestroyTexture(gamebkgDayTex);
   SDL_DestroyTexture(gamebkgMorningTex);
-	SDL_DestroyRenderer(renderer);
+  SDL_DestroyRenderer(renderer);
 
   TTF_Quit();
   IMG_Quit();

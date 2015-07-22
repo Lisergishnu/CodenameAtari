@@ -24,7 +24,7 @@ startNewLevel(int lvl)
 	lift.drawSpace.y = 164;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
-	lift.orientation = SP_0;
+	lift.orientation = SP_180;
 	lift.position.x = 50;
 	lift.position.y = 50;
 
