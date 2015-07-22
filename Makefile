@@ -7,7 +7,9 @@ SOURCE = src/*.c
 EXE = ElevatorRescue
 all:
 	mkdir -p build/
-	$(C) $(CFLAGS) $(SDL) $(SOURCE) -o build/$(EXE) 
+	$(C) $(CFLAGS) $(SDL) $(SOURCE) -o build/$(EXE)
+	cp -r img/ build/
+	cp -r res/ build/
 run:
 	build/$(EXE)
 clean:
