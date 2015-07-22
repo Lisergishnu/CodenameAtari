@@ -20,7 +20,7 @@ startNewLevel(int lvl)
 
 	
 	lift.health = 5;
-	lift.drawSpace.x = 288;
+	lift.drawSpace.x = 188;
 	lift.drawSpace.y = 164;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;

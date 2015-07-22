@@ -98,6 +98,7 @@ render()
 				&bkgRect);
   /* Draw lift */
   destRect = lift.drawSpace;
+  destRect.x += 100;
   SDL_RenderCopy(renderer,
       liftTex,
       NULL,
