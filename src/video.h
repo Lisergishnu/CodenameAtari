@@ -15,7 +15,9 @@ extern GameState currentGameState;
 int imgFlags;
 /* Game textures */
 SDL_Renderer *renderer;
-SDL_Texture *gamebkg;
+SDL_Texture *gamebkgMorningTex;
+SDL_Texture *gamebkgDayTex;
+SDL_Texture *gamebkgNightTex;
 SDL_Texture *liftTex;
 SDL_Texture *topBaseTex;
 SDL_Texture *bottomBaseTex;

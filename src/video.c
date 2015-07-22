@@ -31,11 +31,17 @@ initVideo()
 void
 loadAssets()
 {
-	gamebkg = IMG_LoadTexture(renderer,
-      "img/fondoJuego.png");
-  ASSERT_IMG(gamebkg);
+	gamebkgMorningTex = IMG_LoadTexture(renderer,
+      "img/morning.png");
+  ASSERT_IMG(gamebkgMorningTex);
+  gamebkgDayTex = IMG_LoadTexture(renderer,
+      "img/day.png");
+  ASSERT_IMG(gamebkgDayTex);
+  gamebkgNightTex = IMG_LoadTexture(renderer,
+      "img/night.png");
+  ASSERT_IMG(gamebkgNightTex);
   liftTex = IMG_LoadTexture(renderer,
-      "res/sprites/lift.png");
+      "res/sprites/ascensor.png");
   ASSERT_IMG(liftTex);
   topBaseTex = IMG_LoadTexture(renderer,
       "res/sprites/base1.png");
@@ -76,7 +82,7 @@ render()
 {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer,
-				gamebkg,
+				gamebkgDayTex,
 				NULL,
 				&bkgRect);
   /* Draw lift */
@@ -105,7 +111,9 @@ cleanUpVideo()
   SDL_DestroyTexture(bottomBaseTex);
   SDL_DestroyTexture(topBaseTex);
   SDL_DestroyTexture(liftTex);
-	SDL_DestroyTexture(gamebkg);
+	SDL_DestroyTexture(gamebkgNightTex);
+  SDL_DestroyTexture(gamebkgDayTex);
+  SDL_DestroyTexture(gamebkgMorningTex);
 	SDL_DestroyRenderer(renderer);
 
   TTF_Quit();
