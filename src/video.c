@@ -8,10 +8,11 @@ SDL_Rect destRect = {0,0,0,0};
 void
 initVideo()
 {
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	
+	renderer = SDL_CreateRenderer(window, -1,
+      SDL_RENDERER_ACCELERATED);
 	 //Initialize renderer color
-	SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	SDL_SetRenderDrawColor( renderer, 0x00, 0x00,
+      0x00, 0xFF );
 
 	//Initialize PNG loading
 	imgFlags = IMG_INIT_PNG;
@@ -24,9 +25,11 @@ initVideo()
 void
 loadAssets()
 {
-	gamebkg = IMG_LoadTexture(renderer, "img/fondoJuego.png");
+	gamebkg = IMG_LoadTexture(renderer,
+      "img/fondoJuego.png");
   ASSERT_IMG(gamebkg);
-  liftTex = IMG_LoadTexture(renderer, "res/sprites/lift.png");
+  liftTex = IMG_LoadTexture(renderer,
+      "res/sprites/lift.png");
   ASSERT_IMG(liftTex);
   topBaseTex = IMG_LoadTexture(renderer,
       "res/sprites/base1.png");
@@ -37,6 +40,8 @@ loadAssets()
   bulletTex = IMG_LoadTexture(renderer,
       "res/sprites/bala.png");
   ASSERT_IMG(bulletTex);
+
+  font = TTF_OpenFont( "font/game.ttf",8);
 }
 
 void
@@ -60,6 +65,7 @@ render()
 void
 cleanUpVideo()
 {
+  TTF_CloseFont(font);
   SDL_DestroyTexture(bulletTex);
   SDL_DestroyTexture(bottomBaseTex);
   SDL_DestroyTexture(topBaseTex);
