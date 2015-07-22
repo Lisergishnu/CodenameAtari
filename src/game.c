@@ -20,8 +20,10 @@ startNewLevel(int lvl)
 
 	
 	lift.health = 5;
-	lift.drawSpace.x = 24;
-	lift.drawSpace.y = 24;
+	lift.drawSpace.x = 50;
+	lift.drawSpace.y = 50;
+  lift.drawSpace.h = 24;
+  lift.drawSpace.w = 24;
 	lift.orientation = SP_0;
 	lift.position.x = 50;
 	lift.position.y = 50;
