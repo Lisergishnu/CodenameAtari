@@ -13,6 +13,7 @@ extern GameState currentGameState;
 int imgFlags;
 SDL_Renderer *renderer;
 SDL_Texture *gamebkg;
+SDL_Texture *lift;
 extern SDL_Window *window;
 
 void
