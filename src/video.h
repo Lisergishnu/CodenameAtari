@@ -9,12 +9,21 @@
 #include "sdl.h"
 #include "game.h"
 
+#define ASSERT_IMG(x) if(x==NULL) printf("Couldn't load image.\n");
+
 extern GameState currentGameState;
 int imgFlags;
+/* Game textures */
 SDL_Renderer *renderer;
 SDL_Texture *gamebkg;
-SDL_Texture *lift;
+SDL_Texture *liftTex;
+SDL_Texture *topBaseTex;
+SDL_Texture *bottomBaseTex;
+SDL_Texture *bulletTex;
+
 extern SDL_Window *window;
+extern Lift lift;
+extern GameState currentGameState;
 
 void
 initVideo();
