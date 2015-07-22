@@ -20,6 +20,12 @@ initVideo()
 	{
 		printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
 	}
+
+  //Initialize TTF rendering
+  if ( TTF_Init() == -1)
+  {
+    printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+  }
 }
 
 void
@@ -45,6 +51,27 @@ loadAssets()
 }
 
 void
+PrintText(
+    int x,
+    int y,
+    char *str)
+{
+ SDL_Color textColor = {255,255,255,0};
+ SDL_Surface* textSurface = TTF_RenderText_Solid(
+     font,
+     str,
+     textColor);
+ SDL_Texture* text = SDL_CreateTextureFromSurface(
+     renderer, textSurface);
+ int textw = textSurface->w;
+ int texth = textSurface->h;
+ SDL_FreeSurface(textSurface);
+ SDL_Rect renderQuad = {x,y,textw,texth};
+ SDL_RenderCopy(renderer, text, NULL, &renderQuad);
+ SDL_DestroyTexture(text);
+}
+
+void
 render()
 {
 	SDL_RenderClear(renderer);
@@ -58,7 +85,10 @@ render()
       liftTex,
       NULL,
       &destRect);
-
+  /* Draw score */
+  char str[15];
+  sprintf(str,"%d", currentGameState.currentScore);
+  PrintText(20, 20, str);
 	SDL_RenderPresent(renderer);
 }
 
@@ -72,4 +102,7 @@ cleanUpVideo()
   SDL_DestroyTexture(liftTex);
 	SDL_DestroyTexture(gamebkg);
 	SDL_DestroyRenderer(renderer);
+
+  TTF_Quit();
+  IMG_Quit();
 }

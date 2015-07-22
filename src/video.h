@@ -28,6 +28,13 @@ extern SDL_Window *window;
 extern Lift lift;
 extern GameState currentGameState;
 
+/* Methods */
+void
+PrintText(
+    int x,
+    int y,
+    char * str);
+
 void
 initVideo();
 
