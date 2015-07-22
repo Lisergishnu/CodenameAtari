@@ -22,6 +22,7 @@ SDL_Texture *liftTex;
 SDL_Texture *topBaseTex;
 SDL_Texture *bottomBaseTex;
 SDL_Texture *bulletTex;
+SDL_Texture *shieldTex;
 /* Game font */
 TTF_Font *font;
 

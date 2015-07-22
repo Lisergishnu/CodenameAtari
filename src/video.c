@@ -4,6 +4,7 @@
 SDL_Rect bkgRect = {100,0,220,192};
 SDL_Rect scoreBannerRect = {0,0,100,192};
 SDL_Rect destRect = {0,0,0,0};
+SDL_Rect liftShieldDestRect = {0,0,0,0};
 
 void
 initVideo()
@@ -52,8 +53,13 @@ loadAssets()
   bulletTex = IMG_LoadTexture(renderer,
       "res/sprites/bala.png");
   ASSERT_IMG(bulletTex);
+  shieldTex = IMG_LoadTexture(renderer,
+      "res/sprites/barra.png");
+  ASSERT_IMG(shieldTex);
 
   font = TTF_OpenFont( "font/game.ttf",10);
+  if (font == NULL)
+    printf("Couldn't load game font!\n");
 }
 
 void
@@ -78,6 +84,11 @@ PrintText(
 }
 
 void
+updateAndRenderShield()
+{
+}
+
+void
 render()
 {
 	SDL_RenderClear(renderer);
@@ -96,10 +107,16 @@ render()
   sprintf(str,"Score: %d",
       currentGameState.currentScore);
   PrintText(20, 20, str);
-  /* Draw lives */
+  /* Draw current level */
   sprintf(str,"Level: %d",
       currentGameState.currentLevel);
   PrintText(20,50, str);
+  /* Draw current health */
+  sprintf(str,"Health: %d",
+      lift.health);
+  PrintText(20,80, str);
+
+  updateAndRenderShield();
 	SDL_RenderPresent(renderer);
 }
 
@@ -107,6 +124,7 @@ void
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(shieldTex);
   SDL_DestroyTexture(bulletTex);
   SDL_DestroyTexture(bottomBaseTex);
   SDL_DestroyTexture(topBaseTex);
