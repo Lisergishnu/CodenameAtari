@@ -47,7 +47,7 @@ loadAssets()
       "res/sprites/bala.png");
   ASSERT_IMG(bulletTex);
 
-  font = TTF_OpenFont( "font/game.ttf",8);
+  font = TTF_OpenFont( "font/game.ttf",10);
 }
 
 void
@@ -87,8 +87,13 @@ render()
       &destRect);
   /* Draw score */
   char str[15];
-  sprintf(str,"%d", currentGameState.currentScore);
+  sprintf(str,"Score: %d",
+      currentGameState.currentScore);
   PrintText(20, 20, str);
+  /* Draw lives */
+  sprintf(str,"Level: %d",
+      currentGameState.currentLevel);
+  PrintText(20,50, str);
 	SDL_RenderPresent(renderer);
 }
 
