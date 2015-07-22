@@ -145,7 +145,7 @@ render()
       NULL,
       &bkgRect);
   /* Draw top base */
-  destRect.x = currentGameState.topBase.x;
+  destRect.x = 100 + currentGameState.topBase.x;
   destRect.y = currentGameState.topBase.y;
   destRect.w = 24;
   destRect.h = 24;
@@ -173,6 +173,16 @@ render()
   sprintf(str,"Health: %d",
       lift.health);
   PrintText(20,80, str);
+
+  /* Draw bottom base */
+  destRect.x = 100 + currentGameState.botBase.x;
+  destRect.y = currentGameState.botBase.y;
+  destRect.w = 24;
+  destRect.h = 24;
+  SDL_RenderCopy(renderer,
+      bottomBaseTex,
+      NULL,
+      &destRect);
 
   updateAndRenderShield();
   SDL_RenderPresent(renderer);
