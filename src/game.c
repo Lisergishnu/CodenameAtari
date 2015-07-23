@@ -10,23 +10,23 @@ void
 startNewLevel(int lvl)
 {
 	currentGameState.currentLevel = lvl;
-	currentGameState.topBase.x = 100;
-	currentGameState.topBase.y = 100;
-	currentGameState.botBase.x = 1;
-	currentGameState.botBase.y = 1;
+	currentGameState.topBase.x = 1;
+	currentGameState.topBase.y = 35;
+	currentGameState.botBase.x = 196;
+	currentGameState.botBase.y = 168;
 	currentGameState.onScreenMissileCount = 10;
 
 	initializeMissiles();
 
 	
 	lift.health = 5;
-	lift.drawSpace.x = 188;
-	lift.drawSpace.y = 164;
+	lift.drawSpace.x = 107;
+	lift.drawSpace.y = 108;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
 	lift.orientation = SP_180;
-	lift.position.x = 50;
-	lift.position.y = 50;
+	lift.position.x = 107;
+	lift.position.y = 108;
 
 
 

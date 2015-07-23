@@ -22,7 +22,7 @@
 
 #define MAX_MISSILE_COUNT 100
 
-#define WORLD_WIDTH 320
+#define WORLD_WIDTH 220
 #define WORLD_HEIGHT 192
 
 // Element definitions

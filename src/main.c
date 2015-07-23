@@ -41,8 +41,8 @@ init()
 		window = SDL_CreateWindow( "Elevator Rescue",
 			SDL_WINDOWPOS_CENTERED, 
 			SDL_WINDOWPOS_CENTERED, 
-		 WORLD_WIDTH, 
-		 WORLD_HEIGHT, 
+		 320, 
+		 192, 
 		 SDL_WINDOW_SHOWN );
 		if( window == NULL )
 		{
