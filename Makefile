@@ -6,12 +6,14 @@ LDFLAGS = $(SDL)
 SOURCE = src/*.c
 EXE = ElevatorRescue
 all:
-	mkdir -p build/
+	mkdir -p build/$(EXE).app/Contents/MacOS
 	$(C) $(CFLAGS) $(SDL) $(SOURCE) -o build/$(EXE)
-	cp -r img build
-	cp -r res build
-	cp -r font build
+	mv build/$(EXE) build/$(EXE).app/Contents/MacOS
+	cp etc/Info.plist build/$(EXE).app/Contents/
+	cp -r img build/$(EXE).app/Contents/MacOS
+	cp -r res build/$(EXE).app/Contents/MacOS
+	cp -r font build/$(EXE).app/Contents/MacOS
 run:
-	build/$(EXE)
+	build/$(EXE).app/Contents/MacOS/$(EXE)
 clean:
 	rm -rf build/
