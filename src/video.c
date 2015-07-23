@@ -83,6 +83,11 @@ loadAssets()
       "res/sprites/escudobot.png");
   ASSERT_IMG(shieldBTex);
 
+  /*Load the "ready" prompt */
+  readyPromptTex = IMG_LoadTexture(renderer,
+      "res/sprites/ready.png");
+  ASSERT_IMG(readyPromptTex);
+
   font = TTF_OpenFont( "font/game.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
@@ -204,6 +209,21 @@ render()
       &destRect);
 
   updateAndRenderShield();
+
+
+  /*Render the "ready" prompt if necesary*/
+  if (currentGameState.currentGameScene == GS_START)
+  {
+    destRect.x = 178;
+    destRect.y = 88;
+    destRect.w = 64;
+    destRect.h = 16;
+    scaleDestRect(&destRect);
+    SDL_RenderCopy(renderer,
+        readyPromptTex,
+        NULL,
+        &destRect);
+  }
   SDL_RenderPresent(renderer);
 }
 
@@ -211,6 +231,7 @@ render()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(readyPromptTex);
   SDL_DestroyTexture(shieldBTex);
   SDL_DestroyTexture(shieldTTex);
   SDL_DestroyTexture(shieldRTex);

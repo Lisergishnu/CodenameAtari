@@ -27,6 +27,7 @@ SDL_Texture *shieldLTex;
 SDL_Texture *shieldRTex;
 SDL_Texture *shieldTTex;
 SDL_Texture *shieldBTex;
+SDL_Texture *readyPromptTex;
 /* Game font */
 TTF_Font *font;
 
