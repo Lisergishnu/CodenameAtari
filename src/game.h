@@ -128,4 +128,6 @@ initializeMissiles();
 void
 updatePositions();
 
+void
+cleanGameLogic();
 #endif //__GAME.H

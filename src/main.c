@@ -50,18 +50,6 @@ init()
 		}
 		else
 		{
-			////Get window surface
-			//surface = SDL_GetWindowSurface( window );
-			//
-			////Fill the surface white
-			//SDL_FillRect( surface, NULL, SDL_MapRGB( surface->format, 0xFF, 0xFF, 0xFF ) );
-			//
-			////Update the surface
-			//SDL_UpdateWindowSurface( window );
-			//
-			////Wait two seconds
-			//SDL_Delay( 2000 );
-			
 			initGameLogic();
 			initVideo();
 		}
@@ -71,6 +59,8 @@ init()
 void
 shutdown()
 {
+  cleanUpVideo();
+  cleanGameLogic();
 	//Destroy window
     SDL_DestroyWindow( window );
 

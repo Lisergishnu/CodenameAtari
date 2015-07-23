@@ -89,3 +89,8 @@ updatePositions()
 		}
 	}*/
 }
+
+void
+cleanGameLogic()
+{
+}
