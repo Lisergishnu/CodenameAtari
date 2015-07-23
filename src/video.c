@@ -1,10 +1,25 @@
 #include "video.h"
 
 
-SDL_Rect bkgRect = {100,0,220,192};
-SDL_Rect scoreBannerRect = {0,0,100,192};
+SDL_Rect bkgRect = {100*SCALING_FACTOR,
+    0*SCALING_FACTOR,
+    220*SCALING_FACTOR,
+    192*SCALING_FACTOR};
+SDL_Rect scoreBannerRect = {0*SCALING_FACTOR,
+    0*SCALING_FACTOR,
+    100*SCALING_FACTOR,
+    192*SCALING_FACTOR};
 SDL_Rect destRect = {0,0,0,0};
 SDL_Rect liftShieldDestRect = {0,0,0,0};
+
+void
+scaleDestRect(SDL_Rect *rect)
+{
+    rect->x *= SCALING_FACTOR;
+    rect->y *= SCALING_FACTOR;
+    rect->w *= SCALING_FACTOR;
+    rect->h *= SCALING_FACTOR;
+}
 
   void
 initVideo()
@@ -68,7 +83,7 @@ loadAssets()
       "res/sprites/escudobot.png");
   ASSERT_IMG(shieldBTex);
 
-  font = TTF_OpenFont( "font/game.ttf",10);
+  font = TTF_OpenFont( "font/game.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
 }
@@ -131,6 +146,7 @@ updateAndRenderShield()
   liftShieldDestRect.x = xPos;
   liftShieldDestRect.y = yPos;
 
+    scaleDestRect(&liftShieldDestRect);
   SDL_RenderCopy(renderer, currentTex, NULL,
       &liftShieldDestRect);
 
@@ -149,6 +165,7 @@ render()
   destRect.y = currentGameState.topBase.y;
   destRect.w = 24;
   destRect.h = 24;
+    scaleDestRect(&destRect);
   SDL_RenderCopy(renderer,
       topBaseTex,
       NULL,
@@ -156,6 +173,7 @@ render()
   /* Draw lift */
   destRect = lift.drawSpace;
   destRect.x += 100;
+    scaleDestRect(&destRect);
   SDL_RenderCopy(renderer,
       liftTex,
       NULL,
@@ -179,6 +197,7 @@ render()
   destRect.y = currentGameState.botBase.y;
   destRect.w = 24;
   destRect.h = 24;
+    scaleDestRect(&destRect);
   SDL_RenderCopy(renderer,
       bottomBaseTex,
       NULL,

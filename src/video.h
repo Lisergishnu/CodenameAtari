@@ -9,6 +9,7 @@
 #include "sdl.h"
 #include "game.h"
 
+#define SCALING_FACTOR 2
 #define ASSERT_IMG(x) if(x==NULL) printf("Couldn't load image: %s.\n", #x);
 
 extern GameState currentGameState;
