@@ -6,6 +6,7 @@
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .001f
 #define GS_READY_SCREEN_TIMER 3000.0f
+#define GAME_MS_PER_PIXEL 30.0f
 
 float startTimer;
 char isGoingUphill;
@@ -209,21 +210,35 @@ updatePositions(float dt)
    * one second since our timer resoultion
    * doesn't allow for slow movement.
    * */
+  /*
+   * We also check here if the lift has arrived
+   * at destination. In that case we proceed to
+   * the scoring phase.
+   */
   static float liftMovementTimer = 0.0f;
-  if (liftMovementTimer >= 1000.0f)
+  if (liftMovementTimer >= GAME_MS_PER_PIXEL)
   {
-  if (isGoingUphill)
-  {
-    lift.drawSpace.x -= LIFT_SPEED;
-  }
-  else
-  {
-    lift.drawSpace.x += LIFT_SPEED;
-  }
+    if (isGoingUphill)
+    {
+      lift.drawSpace.x -= 1;
+    }
+    else
+    {
+      lift.drawSpace.x += 1;
+    }
 
-  lift.drawSpace.y = lift.drawSpace.x*0.7027 +
-                        33.1892;
-  liftMovementTimer = 0.0f;
+    lift.drawSpace.y = lift.drawSpace.x*0.7027 +
+      33.1892;
+    liftMovementTimer = 0.0f;
+    if ((isGoingUphill &&
+          lift.drawSpace.x <= LIFT_STARTING_POS_TOP_X &&
+          lift.drawSpace.y <= LIFT_STARTING_POS_TOP_Y) ||
+        (!isGoingUphill &&
+         lift.drawSpace.x >= LIFT_STARTING_POS_BOT_X &&
+         lift.drawSpace.y >= LIFT_STARTING_POS_BOT_Y))
+    {
+      currentGameState.currentGameScene = GS_SCORING;
+    }
   }
   else
   {
@@ -231,7 +246,7 @@ updatePositions(float dt)
   }
 }
 
-void
+  void
 cleanGameLogic()
 {
 }
