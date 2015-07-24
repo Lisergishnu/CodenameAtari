@@ -126,7 +126,7 @@ void
 initializeMissiles();
 
 void
-updatePositions();
+updatePositions(float dt);
 
 void
 cleanGameLogic();

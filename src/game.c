@@ -4,6 +4,7 @@
 #define LIFT_STARTING_POS_TOP_Y 36
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
+#define LIFT_SPEED .001f
 #define GS_READY_SCREEN_TIMER 3000.0f
 
 float startTimer;
@@ -62,11 +63,12 @@ update(float dt)
       startTimer +=dt;
       if (startTimer > GS_READY_SCREEN_TIMER)
       {
-        currentGameState.currentGameScene = GS_PLAYING;
+        currentGameState.currentGameScene =
+          GS_PLAYING;
       }
       break;
     case GS_PLAYING:
-      updatePositions();
+      updatePositions(dt);
       //checkCollitions
       //assignDamages
       //assignScores
@@ -175,7 +177,7 @@ initializeMissiles()
 }
 
 void
-updatePositions()
+updatePositions(float dt)
 {
 	/*for(int i=0; i<currentGameState.onScreenMissileCount;i++){
 		switch(currentGameState.missileList[i].orientation){
@@ -201,6 +203,32 @@ updatePositions()
 			break;
 		}
 	}*/
+
+  /* Update lift position */
+  /* We need to stall the position until at least
+   * one second since our timer resoultion
+   * doesn't allow for slow movement.
+   * */
+  static float liftMovementTimer = 0.0f;
+  if (liftMovementTimer >= 1000.0f)
+  {
+  if (isGoingUphill)
+  {
+    lift.drawSpace.x -= LIFT_SPEED;
+  }
+  else
+  {
+    lift.drawSpace.x += LIFT_SPEED;
+  }
+
+  lift.drawSpace.y = lift.drawSpace.x*0.7027 +
+                        33.1892;
+  liftMovementTimer = 0.0f;
+  }
+  else
+  {
+    liftMovementTimer += dt;
+  }
 }
 
 void
