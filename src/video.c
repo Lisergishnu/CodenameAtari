@@ -135,39 +135,39 @@ updateAndRenderShield()
   switch (lift.orientation) {
     case SP_0:
       currentTex = shieldRTex;
-      xPos += 40;
+      xPos += 36;
       break;
     case SP_45:
       currentTex = shieldTRTex;
-      xPos += 40;
-      yPos -= 24;
+      xPos += 22;
+      yPos -= 18;
       break;
     case SP_90:
       currentTex = shieldTTex;
-      yPos -= 24;
+      yPos -= 18;
       break;
     case SP_135:
       currentTex = shieldTLTex;
-      xPos -= 24;
-      yPos -= 24;
+      xPos -= 15;
+      yPos -= 18;
       break;
     case SP_180:
       currentTex = shieldLTex;
-      xPos -= 24;
+      xPos -= 15;
       break;
     case SP_225:
       currentTex = shieldBLTex;
-      xPos -= 24;
-      yPos += 40;
+      xPos -= 15;
+      yPos += 21;
       break;
     case SP_270:
       currentTex = shieldBTex;
-      yPos += 40;
+      yPos += 36;
       break;
     case SP_315:
       currentTex = shieldBRTex;
-      xPos += 40;
-      yPos += 40;
+      xPos += 21;
+      yPos += 21;
       break;
   }
 
