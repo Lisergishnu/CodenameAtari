@@ -15,6 +15,7 @@ startNewLevel(int lvl)
 	currentGameState.botBase.x = 196;
 	currentGameState.botBase.y = 168;
 	currentGameState.onScreenMissileCount = 10;
+  currentGameState.currentGameScene = GS_START;
 
 	initializeMissiles();
 
@@ -42,10 +43,89 @@ update(float dt)
 	//assignScores
 }
 
-/* This function will be called whenever there is a event to process in the game world, i.e. user input */
+/* This function will be called
+ * whenever there is a event to
+ * process in the game world, i.e. user input */
 void
 handleGameInput(SDL_Event e)
 {
+  static char inputXDir = 1; /* 1 der, -1 izq, 0 centro */
+  static char inputYDir = 0; /* 1 up, -1 down, 0 centro */
+
+  switch(e.type)
+  {
+    case SDL_KEYDOWN:
+      switch( e.key.keysym.sym )
+      {
+        case SDLK_LEFT:
+          inputXDir = -1;
+          break;
+        case SDLK_RIGHT:
+          inputXDir = 1;
+          break;
+        case SDLK_UP:
+          inputYDir = 1;
+          break;
+        case SDLK_DOWN:
+          inputYDir = -1;
+          break;
+        default:
+          break;
+      }
+      break;
+    case SDL_KEYUP:
+      switch( e.key.keysym.sym )
+      {
+        case SDLK_LEFT:
+          if (inputXDir == -1)
+            inputXDir = 0;
+          break;
+        case SDLK_RIGHT:
+          if (inputXDir == 1)
+            inputXDir = 0;
+          break;
+        case SDLK_UP:
+          if (inputYDir == 1)
+            inputYDir = 0;
+          break;
+        case SDLK_DOWN:
+          if (inputYDir == -1)
+            inputYDir = 0;
+          break;
+        default:
+          break;
+      }
+      break;
+    default:
+      break;
+  }
+  /* Translate direction "vector"
+   * into Orientation */
+  if (inputXDir == 1)
+  {
+    if (inputYDir == 1)
+     lift.orientation = SP_45;
+    else if (inputYDir == 0)
+      lift.orientation = SP_0;
+    else
+      lift.orientation = SP_315;
+  }
+  else if (inputXDir == 0)
+  {
+    if (inputYDir == 1)
+      lift.orientation = SP_90;
+    else if (inputYDir == -1)
+      lift.orientation = SP_270;
+  }
+  else if (inputXDir == -1)
+  {
+    if (inputYDir == 1)
+      lift.orientation = SP_135;
+    else if (inputYDir == 0)
+      lift.orientation = SP_180;
+    else
+      lift.orientation = SP_225;
+  }
 
 }
 

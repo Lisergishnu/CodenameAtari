@@ -98,7 +98,7 @@ struct __lift
 
 	SDL_Rect drawSpace;
 
-	Orientation orientation;
+	Orientation orientation; //Shield orientation?
 	Vector position;
 } Lift;
 
