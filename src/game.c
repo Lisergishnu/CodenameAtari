@@ -4,6 +4,7 @@
 #define LIFT_STARTING_POS_TOP_Y 36
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
+#define GS_READY_SCREEN_TIMER 3000.0f
 
 float startTimer;
 char isGoingUphill;
@@ -59,7 +60,7 @@ update(float dt)
   {
     case GS_START:
       startTimer +=dt;
-      if (startTimer > 3000.0f)
+      if (startTimer > GS_READY_SCREEN_TIMER)
       {
         currentGameState.currentGameScene = GS_PLAYING;
       }
