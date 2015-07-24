@@ -82,6 +82,18 @@ loadAssets()
   shieldBTex = IMG_LoadTexture(renderer,
       "res/sprites/escudobot.png");
   ASSERT_IMG(shieldBTex);
+  shieldBLTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudobotleft.png");
+  ASSERT_IMG(shieldBLTex);
+  shieldBRTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudobotright.png");
+  ASSERT_IMG(shieldBRTex);
+  shieldTRTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudotopright.png");
+  ASSERT_IMG(shieldTRTex);
+  shieldTLTex = IMG_LoadTexture(renderer,
+      "res/sprites/escudotopleft.png");
+  ASSERT_IMG(shieldTLTex);
 
   /*Load the "ready" prompt */
   readyPromptTex = IMG_LoadTexture(renderer,
@@ -125,21 +137,38 @@ updateAndRenderShield()
       currentTex = shieldRTex;
       xPos += 40;
       break;
+    case SP_45:
+      currentTex = shieldTRTex;
+      xPos += 40;
+      yPos -= 24;
+      break;
     case SP_90:
       currentTex = shieldTTex;
+      yPos -= 24;
+      break;
+    case SP_135:
+      currentTex = shieldTLTex;
+      xPos -= 24;
       yPos -= 24;
       break;
     case SP_180:
       currentTex = shieldLTex;
       xPos -= 24;
       break;
+    case SP_225:
+      currentTex = shieldBLTex;
+      xPos -= 24;
+      yPos += 40;
+      break;
     case SP_270:
       currentTex = shieldBTex;
       yPos += 40;
       break;
-    default:
-      currentTex = shieldRTex;
+    case SP_315:
+      currentTex = shieldBRTex;
       xPos += 40;
+      yPos += 40;
+      break;
   }
 
   SDL_QueryTexture(currentTex,
@@ -232,6 +261,10 @@ cleanUpVideo()
 {
   TTF_CloseFont(font);
   SDL_DestroyTexture(readyPromptTex);
+  SDL_DestroyTexture(shieldTLTex);
+  SDL_DestroyTexture(shieldTRTex);
+  SDL_DestroyTexture(shieldBRTex);
+  SDL_DestroyTexture(shieldBLTex);
   SDL_DestroyTexture(shieldBTex);
   SDL_DestroyTexture(shieldTTex);
   SDL_DestroyTexture(shieldRTex);
