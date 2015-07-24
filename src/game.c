@@ -1,5 +1,14 @@
 #include "game.h"
 
+#define LIFT_STARTING_POS_TOP_X 4
+#define LIFT_STARTING_POS_TOP_Y 36
+#define LIFT_STARTING_POS_BOT_X 189
+#define LIFT_STARTING_POS_BOT_Y 166
+
+float startTimer;
+char isGoingUphill;
+
+
 void
 initGameLogic()
 {
@@ -17,36 +26,59 @@ startNewLevel(int lvl)
 	currentGameState.onScreenMissileCount = 10;
   currentGameState.currentGameScene = GS_START;
 
+  startTimer = 0;
+
 	initializeMissiles();
 
-	
-	lift.health = 5;
-	lift.drawSpace.x = 107;
-	lift.drawSpace.y = 108;
+  if (lvl%2 == 1)
+  {
+    isGoingUphill = 1;
+    lift.drawSpace.x = LIFT_STARTING_POS_BOT_X;
+    lift.drawSpace.y = LIFT_STARTING_POS_BOT_Y;
+  }
+  else
+  {
+    isGoingUphill = 0;
+    lift.drawSpace.x = LIFT_STARTING_POS_TOP_X;
+    lift.drawSpace.y = LIFT_STARTING_POS_TOP_Y;
+  }
+  lift.health = 5;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
 	lift.orientation = SP_180;
-	lift.position.x = 107;
-	lift.position.y = 108;
-
-
+	lift.position.x = lift.drawSpace.x;
+	lift.position.y = lift.drawSpace.y;
 
 	printf("Nivel Cargado: %d", lvl);
 }
 
-void
+  void
 update(float dt)
 {
-	updatePositions();
-	//checkCollitions
-	//assignDamages
-	//assignScores
+  switch(currentGameState.currentGameScene)
+  {
+    case GS_START:
+      startTimer +=dt;
+      if (startTimer > 3000.0f)
+      {
+        currentGameState.currentGameScene = GS_PLAYING;
+      }
+      break;
+    case GS_PLAYING:
+      updatePositions();
+      //checkCollitions
+      //assignDamages
+      //assignScores
+      break;
+    case GS_SCORING:
+      break;
+  }
 }
 
 /* This function will be called
  * whenever there is a event to
  * process in the game world, i.e. user input */
-void
+  void
 handleGameInput(SDL_Event e)
 {
   static char inputXDir = 1; /* 1 der, -1 izq, 0 centro */
@@ -104,7 +136,7 @@ handleGameInput(SDL_Event e)
   if (inputXDir == 1)
   {
     if (inputYDir == 1)
-     lift.orientation = SP_45;
+      lift.orientation = SP_45;
     else if (inputYDir == 0)
       lift.orientation = SP_0;
     else
