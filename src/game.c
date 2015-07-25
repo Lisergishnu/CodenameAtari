@@ -5,9 +5,9 @@
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .001f
-#define MISSILE_SPEED .05f
+#define MISSILE_SPEED .01
 #define GS_READY_SCREEN_TIMER 2500.0f
-#define GAME_MS_PER_PIXEL 100.0f
+#define GAME_MS_PER_PIXEL 500.0f
 
 float startTimer;
 char isGoingUphill;

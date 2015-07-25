@@ -216,8 +216,23 @@ renderMissiles()
 render()
 {
   SDL_RenderClear(renderer);
+  /*Draw background, morning, day or night depending
+   * on level */
+  SDL_Texture* currentBKG;
+  switch((currentGameState.currentLevel - 1)%3)
+  {
+    case 0:
+      currentBKG = gamebkgMorningTex;
+      break;
+    case 1:
+      currentBKG = gamebkgDayTex;
+      break;
+    case 2:
+      currentBKG = gamebkgNightTex;
+      break;
+  }
   SDL_RenderCopy(renderer,
-      gamebkgDayTex,
+      currentBKG,
       NULL,
       &bkgRect);
   /* Draw top base */
