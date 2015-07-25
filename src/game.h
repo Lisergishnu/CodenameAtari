@@ -8,6 +8,8 @@
 
 #include "sdl.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 // Game logic defines
 // Game space 220x192
@@ -52,6 +54,8 @@ struct __missile
 {
 	int isAlive;
 	Vector position;
+  float m,b; //describe the trayectory
+  int dir; //-1 moves to the left, 1 right
 	Orientation orientation;
 } Missile;
 

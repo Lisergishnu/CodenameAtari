@@ -5,16 +5,18 @@
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .001f
+#define MISSILE_SPEED .01f
 #define GS_READY_SCREEN_TIMER 3000.0f
 #define GAME_MS_PER_PIXEL 30.0f
 
 float startTimer;
 char isGoingUphill;
-
+int levelMissileProbThreshold;
 
 void
 initGameLogic()
 {
+  srand(time(NULL));
 	startNewLevel(1);
 }
 
@@ -30,6 +32,15 @@ startNewLevel(int lvl)
   currentGameState.currentGameScene = GS_START;
 
   startTimer = 0;
+  /*
+   * As levels are from increasing dificulty
+   * the probability of having a missile
+   * launched at the player also increases
+   *
+   * Value ranges from 0 to 99. If >= 100
+   * missles always launch.
+   */
+  levelMissileProbThreshold = 10 + 10*lvl;
 
 	initializeMissiles();
 
@@ -56,6 +67,72 @@ startNewLevel(int lvl)
 }
 
   void
+generateMissiles()
+{
+  if (currentGameState.onScreenMissileCount <
+      MAX_MISSILE_COUNT)
+  {
+    int chance = rand() % 100;
+    if (chance <= levelMissileProbThreshold)
+    {
+      int m = 0;
+      while (currentGameState.missileList[m].isAlive == 1)
+        m++;
+      Missile *mis = &currentGameState.missileList[m];
+      mis->isAlive = 1;
+      /* First we select randomly one side of
+       * the screen to appear in.
+       *
+       *     0
+       *   =====
+       * 1 |   | 2
+       *   =====
+       *     3
+       */
+      int side = rand() % 4;
+      switch(side)
+      {
+        case 0:
+          mis->position.x = rand() % WORLD_WIDTH;
+          mis->position.y = 0;
+          break;
+        case 1:
+          mis->position.x = 0;
+          mis->position.y = rand() % WORLD_HEIGHT;
+          break;
+        case 2:
+          mis->position.x = WORLD_WIDTH;
+          mis->position.y = rand() % WORLD_HEIGHT;
+          break;
+        case 3:
+          mis->position.x = rand() % WORLD_WIDTH;
+          mis->position.y = WORLD_HEIGHT;
+          break;
+      }
+      /* Next we store the current player position
+       * since that will give the direction of the
+       * missile
+       */
+      int targetx = lift.drawSpace.x + lift.drawSpace.w/2;
+      int targety = lift.drawSpace.y + lift.drawSpace.h/2;
+      if (targetx - mis->position.x)
+      {
+        targetx += 1;
+      }
+      mis->m = (targety - mis->position.y) /
+        ((float) (targetx - mis->position.x));
+      if (mis->m == 0)
+        mis->m = 0.01f;
+      mis->b = mis->position.y - mis->m*mis->position.x;
+      if (targetx > mis->position.x)
+        mis->dir = 1;
+      else
+        mis->dir = -1;
+    }
+  }
+}
+
+  void
 update(float dt)
 {
   switch(currentGameState.currentGameScene)
@@ -69,6 +146,7 @@ update(float dt)
       }
       break;
     case GS_PLAYING:
+      generateMissiles();
       updatePositions(dt);
       //checkCollitions
       //assignDamages
@@ -169,7 +247,9 @@ void
 initializeMissiles()
 {
 	int i;
-	for(i=0; i<currentGameState.onScreenMissileCount;i++){
+	for(i=0;
+      i<MAX_MISSILE_COUNT;
+      i++){
 		currentGameState.missileList[i].isAlive = 0;
 		currentGameState.missileList[i].position.x = 0;
 		currentGameState.missileList[i].position.y = 0;
@@ -243,6 +323,31 @@ updatePositions(float dt)
   else
   {
     liftMovementTimer += dt;
+  }
+  /* Update missile positions */
+  int m;
+  for (m = 0;
+      m <= MAX_MISSILE_COUNT;
+      m++)
+  {
+    Missile *mi = &currentGameState.missileList[m];
+    if (mi->isAlive == 1)
+    {
+      mi->position.x = (mi->dir == 1) ?
+        mi->position.x + MISSILE_SPEED*dt:
+        mi->position.x - MISSILE_SPEED*dt;
+      mi->position.y = mi->m*mi->position.x +
+        mi->b;
+
+      /*
+       * If missile leaves screen, mark it as dead.
+       */
+      if ((mi->position.x >= WORLD_WIDTH) ||
+          (mi->position.x <= 0) ||
+          (mi->position.y >= WORLD_HEIGHT) ||
+          (mi->position.y <= 0))
+        mi->isAlive = 0;
+    }
   }
 }
 
