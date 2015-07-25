@@ -199,10 +199,10 @@ renderMissiles()
     if (mil->isAlive == 0)
       continue;
 
-    missileRect.x = mil->position.x + 100;
-    missileRect.y = mil->position.y;
-    missileRect.w = 8;
-    missileRect.h = 8;
+    missileRect.x = (int) (mil->position.x) + 100;
+    missileRect.y = (int) mil->position.y;
+    missileRect.w = 4;
+    missileRect.h = 4;
 
     scaleDestRect(&missileRect);
     SDL_RenderCopy(renderer,

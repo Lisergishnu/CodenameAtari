@@ -5,9 +5,9 @@
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .001f
-#define MISSILE_SPEED .01f
-#define GS_READY_SCREEN_TIMER 3000.0f
-#define GAME_MS_PER_PIXEL 30.0f
+#define MISSILE_SPEED .05f
+#define GS_READY_SCREEN_TIMER 2500.0f
+#define GAME_MS_PER_PIXEL 100.0f
 
 float startTimer;
 char isGoingUphill;
@@ -40,7 +40,7 @@ startNewLevel(int lvl)
    * Value ranges from 0 to 99. If >= 100
    * missles always launch.
    */
-  levelMissileProbThreshold = 10 + 10*lvl;
+  levelMissileProbThreshold = 10 + 20*lvl;
 
 	initializeMissiles();
 
@@ -72,12 +72,14 @@ generateMissiles()
   if (currentGameState.onScreenMissileCount <
       MAX_MISSILE_COUNT)
   {
-    int chance = rand() % 100;
+    int chance = rand() % 10000;
     if (chance <= levelMissileProbThreshold)
     {
       int m = 0;
       while (currentGameState.missileList[m].isAlive == 1)
         m++;
+      if (m >= MAX_MISSILE_COUNT)
+        return;
       Missile *mis = &currentGameState.missileList[m];
       mis->isAlive = 1;
       /* First we select randomly one side of
@@ -109,9 +111,11 @@ generateMissiles()
           mis->position.y = WORLD_HEIGHT;
           break;
       }
-      /* Next we store the current player position
-       * since that will give the direction of the
-       * missile
+      /*
+       * Then we store the factors for a line
+       * equation y = m*x + b so we can then
+       * easly update its trayectorie.
+       * Also we need to define an x direction.
        */
       int targetx = lift.drawSpace.x + lift.drawSpace.w/2;
       int targety = lift.drawSpace.y + lift.drawSpace.h/2;
@@ -253,7 +257,6 @@ initializeMissiles()
 		currentGameState.missileList[i].isAlive = 0;
 		currentGameState.missileList[i].position.x = 0;
 		currentGameState.missileList[i].position.y = 0;
-		currentGameState.missileList[i].orientation = SP_0;
 	}
 }
 
@@ -327,7 +330,7 @@ updatePositions(float dt)
   /* Update missile positions */
   int m;
   for (m = 0;
-      m <= MAX_MISSILE_COUNT;
+      m < MAX_MISSILE_COUNT;
       m++)
   {
     Missile *mi = &currentGameState.missileList[m];

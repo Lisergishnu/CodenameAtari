@@ -35,6 +35,13 @@ struct _vectors
 	int y;
 } Vector;
 
+typedef
+struct _fvec
+{
+  float x;
+  float y;
+} FVector;
+
 // Orientaciones generales
 typedef
 enum _defPos
@@ -53,10 +60,9 @@ typedef
 struct __missile
 {
 	int isAlive;
-	Vector position;
+	FVector position;
   float m,b; //describe the trayectory
   int dir; //-1 moves to the left, 1 right
-	Orientation orientation;
 } Missile;
 
 typedef
