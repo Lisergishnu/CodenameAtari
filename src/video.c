@@ -186,6 +186,32 @@ updateAndRenderShield()
 
 }
 
+void
+renderMissiles()
+{
+  SDL_Rect missileRect;
+  int m = 0;
+  for( m = 0;
+      m < MAX_MISSILE_COUNT;
+      m++)
+  {
+    Missile *mil = &currentGameState.missileList[m];
+    if (mil->isAlive == 0)
+      continue;
+
+    missileRect.x = mil->position.x + 100;
+    missileRect.y = mil->position.y;
+    missileRect.w = 8;
+    missileRect.h = 8;
+
+    scaleDestRect(&missileRect);
+    SDL_RenderCopy(renderer,
+        bulletTex,
+        NULL,
+        &missileRect);
+  }
+}
+
   void
 render()
 {
@@ -237,6 +263,7 @@ render()
       NULL,
       &destRect);
 
+  renderMissiles();
   updateAndRenderShield();
 
 
