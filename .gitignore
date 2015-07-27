@@ -1,4 +1,5 @@
 build/
+build-win32/
 projectFiles/
 
 # Created by https://www.gitignore.io
