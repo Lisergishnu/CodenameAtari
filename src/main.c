@@ -38,7 +38,7 @@ init()
 	 else
 	{
 		//Create window
-		window = SDL_CreateWindow( "Elevator Rescue",
+		window = SDL_CreateWindow( "Elevator Rescue v0.1",
 			SDL_WINDOWPOS_CENTERED, 
 			SDL_WINDOWPOS_CENTERED, 
 		 320*SCALING_FACTOR, 
