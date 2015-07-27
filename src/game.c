@@ -181,10 +181,8 @@ update(float dt)
             displayScoring -= 5;
             startTimer = 0;
           }
-
           if (displayScoring <= 0)
             currentGameState.peopleRescued -= 1;
-
         }
         else
         {

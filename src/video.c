@@ -100,7 +100,15 @@ loadAssets()
       "res/sprites/ready.png");
   ASSERT_IMG(readyPromptTex);
 
-  font = TTF_OpenFont( "font/game.ttf",16);
+  /* Load splash and side bar textures */
+  scoreBarTex = IMG_LoadTexture(renderer,
+      "img/Scorebarra.png");
+  ASSERT_IMG(scoreBarTex);
+  splashTex = IMG_LoadTexture(renderer,
+      "img/Splash.png");
+  ASSERT_IMG(splashTex);
+
+  font = TTF_OpenFont( "font/game.ttf",24);
   if (font == NULL)
     printf("Couldn't load game font!\n");
 }
@@ -253,25 +261,7 @@ render()
       liftTex,
       NULL,
       &destRect);
-  /* Draw score */
-  char str[30];
-  sprintf(str,"Score: %d",
-      currentGameState.currentScore);
-  PrintText(20, 20, str);
-  /* Draw current level */
-  sprintf(str,"Level: %d",
-      currentGameState.currentLevel);
-  PrintText(20,50, str);
-  /* Draw current health */
-  sprintf(str,"Health: %d",
-      lift.health);
-  PrintText(20,80, str);
-  /* Draw current people on board */
-  sprintf(str,"People aboard: %d",
-      currentGameState.peopleRescued);
-  PrintText(20,110, str);
-
-  /* Draw bottom base */
+    /* Draw bottom base */
   destRect.x = 100 + currentGameState.botBase.x;
   destRect.y = currentGameState.botBase.y;
   destRect.w = 24;
@@ -284,6 +274,29 @@ render()
 
   renderMissiles();
   updateAndRenderShield();
+
+  /* Draw score bar at left */
+  SDL_RenderCopy(renderer,
+      scoreBarTex,
+      NULL,
+      &scoreBannerRect);
+/* Draw score */
+  char str[30];
+  sprintf(str,"%d",
+      currentGameState.currentScore);
+  PrintText(19*SCALING_FACTOR, 38*SCALING_FACTOR, str);
+  /* Draw current level */
+  sprintf(str,"%d",
+      currentGameState.currentLevel);
+  PrintText(19*SCALING_FACTOR,67*SCALING_FACTOR, str);
+  /* Draw current health */
+  sprintf(str,"Vida:%d",
+      lift.health);
+  PrintText(19*SCALING_FACTOR,150*SCALING_FACTOR,str);
+  /* Draw current people on board */
+  sprintf(str,"People x %d",
+      currentGameState.peopleRescued);
+  PrintText(19*SCALING_FACTOR,97*SCALING_FACTOR, str);
 
 
   /*Render the "ready" prompt if necesary*/
@@ -306,6 +319,8 @@ render()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(splashTex);
+  SDL_DestroyTexture(scoreBarTex);
   SDL_DestroyTexture(readyPromptTex);
   SDL_DestroyTexture(shieldTLTex);
   SDL_DestroyTexture(shieldTRTex);
