@@ -4,14 +4,18 @@
 #define LIFT_STARTING_POS_TOP_Y 36
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
-#define LIFT_SPEED .001f
+#define LIFT_SPEED .1f
 #define MISSILE_SPEED .01
 #define GS_READY_SCREEN_TIMER 2500.0f
-#define GAME_MS_PER_PIXEL 500.0f
+#define GAME_MS_PER_PIXEL 10.0f
+#define GAME_SCORE_PER_PERSON 100
+#define GS_SCORING_MS_PER_TICK 50.0f
+#define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
 
 float startTimer;
 char isGoingUphill;
 int levelMissileProbThreshold;
+int displayScoring = 0;
 
 void
 initGameLogic()
@@ -30,6 +34,7 @@ startNewLevel(int lvl)
 	currentGameState.botBase.y = 168;
 	currentGameState.onScreenMissileCount = 10;
   currentGameState.currentGameScene = GS_START;
+  currentGameState.peopleRescued = 10;
 
   startTimer = 0;
   /*
@@ -157,6 +162,38 @@ update(float dt)
       //assignScores
       break;
     case GS_SCORING:
+      /*
+       * The idea is to show the score adding up
+       * slowly as the people rescued decrease.
+       * Then we wait a little before begining
+       * the next level.
+       */
+      startTimer += dt;
+      if (startTimer > GS_SCORING_MS_PER_TICK)
+      {
+        if (currentGameState.peopleRescued > 0)
+        {
+          if (displayScoring <= 0)
+            displayScoring = GAME_SCORE_PER_PERSON;
+          else
+          {
+            currentGameState.currentScore += 5;
+            displayScoring -= 5;
+            startTimer = 0;
+          }
+
+          if (displayScoring <= 0)
+            currentGameState.peopleRescued -= 1;
+
+        }
+        else
+        {
+          if (startTimer > GS_SCORING_MS_BEFORE_NEXT_LEVEL)
+          {
+            startNewLevel(currentGameState.currentLevel + 1);
+          }
+        }
+      }
       break;
   }
 }
@@ -321,6 +358,7 @@ updatePositions(float dt)
          lift.drawSpace.y >= LIFT_STARTING_POS_BOT_Y))
     {
       currentGameState.currentGameScene = GS_SCORING;
+      startTimer = 0;
     }
   }
   else

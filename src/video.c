@@ -254,7 +254,7 @@ render()
       NULL,
       &destRect);
   /* Draw score */
-  char str[15];
+  char str[30];
   sprintf(str,"Score: %d",
       currentGameState.currentScore);
   PrintText(20, 20, str);
@@ -266,6 +266,10 @@ render()
   sprintf(str,"Health: %d",
       lift.health);
   PrintText(20,80, str);
+  /* Draw current people on board */
+  sprintf(str,"People aboard: %d",
+      currentGameState.peopleRescued);
+  PrintText(20,110, str);
 
   /* Draw bottom base */
   destRect.x = 100 + currentGameState.botBase.x;

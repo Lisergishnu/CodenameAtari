@@ -1,3 +1,4 @@
+VERSION=v0.1
 C = gcc
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
@@ -31,7 +32,11 @@ win32:
 	cp -r img build-win32/
 	cp -r res build-win32/
 	cp -r font build-win32/
+	rm -f build-win32/$(EXE)-$(VERSION).zip
+	zip -r $(EXE)-$(VERSION).zip build-win32
+	mv $(EXE)-$(VERSION).zip build-win32/
 run:
 	build/$(EXE).app/Contents/MacOS/$(EXE)
 clean:
 	rm -rf build/
+	rm -rf build-win32/
