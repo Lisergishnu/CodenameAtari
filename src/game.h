@@ -140,4 +140,9 @@ updatePositions(float dt);
 
 void
 cleanGameLogic();
+
+extern
+SDL_Rect
+getShieldRect();
+
 #endif //__GAME.H

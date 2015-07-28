@@ -6,9 +6,10 @@
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .1f
 #define MISSILE_SPEED 0.1f
+#define GAME_SCORE_PER_BLOCK 1.0f
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_PIXEL 50.0f
-#define GAME_SCORE_PER_PERSON 100
+#define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
 
@@ -289,31 +290,6 @@ initializeMissiles()
 void
 updatePositions(float dt)
 {
-	/*for(int i=0; i<currentGameState.onScreenMissileCount;i++){
-		switch(currentGameState.missileList[i].orientation){
-		case SP_0:
-			//currentGameState.missileList[i].position.x += SIZE_BULLET*GAME_GRID_SIZE;
-			//currentGameState.missileList[i].position.y = 0;
-			break;
-		case SP_45:
-			break;
-		case SP_90:
-			break;
-		case SP_135:
-			break;
-		case SP_180:
-			break;
-		case SP_225:
-			break;
-		case SP_270:
-			break;
-		case SP_315:
-			break;
-		default:
-			break;
-		}
-	}*/
-
   /* Update lift position */
   /* We need to stall the position until at least
    * one second since our timer resoultion
@@ -366,9 +342,28 @@ updatePositions(float dt)
       mi->position.x += cos(mi->angle)*MISSILE_SPEED*dt;
       mi->position.y += sin(mi->angle)*MISSILE_SPEED*dt;
 
+      /* 
+       * Consider if the current missile has collided
+       * with the shield
+       */
+
+      SDL_Rect r = getShieldRect();
+      SDL_Rect mir;
+      mir.x = mi->position.x;
+      mir.y = mi->position.y;
+      mir.w = 4;
+      mir.h = 4;
+
+      if (SDL_HasIntersection(&r, &mir) == SDL_TRUE)
+      {
+        mi->isAlive = 0;
+        currentGameState.currentScore += GAME_SCORE_PER_BLOCK;
+      }       
+
       /*
        * If missile leaves screen, mark it as dead.
        */
+
       if ((mi->position.x >= WORLD_WIDTH) ||
           (mi->position.x <= 0) ||
           (mi->position.y >= WORLD_HEIGHT) ||

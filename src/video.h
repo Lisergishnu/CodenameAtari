@@ -66,4 +66,7 @@ render();
 void
 cleanUpVideo();
 
+SDL_Rect
+getShieldRect();
+
 #endif //__VIDEO_H

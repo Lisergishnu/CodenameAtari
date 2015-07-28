@@ -143,10 +143,16 @@ PrintText(
   SDL_DestroyTexture(text);
 }
 
+SDL_Rect
+getShieldRect()
+{
+  return liftShieldDestRect;
+}
+
   void
 updateAndRenderShield()
 {
-  int xPos = lift.drawSpace.x + 100;
+  int xPos = lift.drawSpace.x;
   int yPos = lift.drawSpace.y;
   SDL_Texture* currentTex = NULL;
   switch (lift.orientation) {
@@ -197,9 +203,11 @@ updateAndRenderShield()
   liftShieldDestRect.x = xPos;
   liftShieldDestRect.y = yPos;
 
-    scaleDestRect(&liftShieldDestRect);
+  destRect = liftShieldDestRect;
+  destRect.x += 100;
+    scaleDestRect(&destRect);
   SDL_RenderCopy(renderer, currentTex, NULL,
-      &liftShieldDestRect);
+      &destRect);
 
 }
 
