@@ -18,13 +18,13 @@ appscenes
 } AppScene;
 
 // Global Variables
-AppScene currentScene = APPSCENE_GAMEPLAY;
+AppScene currentScene = APPSCENE_MAINMENU;
 SDL_Window *window = NULL;
 SDL_Surface *surface = NULL;
 int isGameRunning = 1;
 SDL_Event currentEvent;
 int lastTick = 0;
-
+char currentMenuSelection = 0;
 // Methods
 void
 init()
@@ -38,7 +38,7 @@ init()
 	 else
 	{
 		//Create window
-		window = SDL_CreateWindow( "Elevator Rescue v0.2",
+		window = SDL_CreateWindow( "Elevator Rescue v0.3",
 			SDL_WINDOWPOS_CENTERED, 
 			SDL_WINDOWPOS_CENTERED, 
 		 320*SCALING_FACTOR, 
@@ -92,6 +92,33 @@ main(int argc, char *argv[])
 				}
 				break;
 			case APPSCENE_MAINMENU:
+        while (SDL_PollEvent( &currentEvent ) != 0)
+        {
+          if (currentEvent.type == SDL_QUIT)
+          {
+            isGameRunning = 0;
+          }
+          else if (currentEvent.type == SDL_KEYDOWN)
+          {
+            switch(currentEvent.key.keysym.sym)
+            {
+              case SDLK_RIGHT:
+              case SDLK_DOWN:
+              case SDLK_LEFT:
+              case SDLK_UP:
+                currentMenuSelection = (currentMenuSelection == 0) ?1:0;
+                break;
+              case SDLK_RETURN:
+                if (currentMenuSelection == 0)
+                  currentScene = APPSCENE_GAMEPLAY;
+                else
+                  isGameRunning = 0;
+                break;
+            }
+          }
+        }
+        renderSplashScreen();
+        break;
 			case APPSCENE_GAMEPLAY:
 				//Handle events on queue
 				while( SDL_PollEvent( &currentEvent ) != 0 )

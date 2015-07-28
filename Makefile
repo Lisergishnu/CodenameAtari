@@ -1,4 +1,4 @@
-VERSION=v0.2
+VERSION=v0.3
 C = gcc
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x

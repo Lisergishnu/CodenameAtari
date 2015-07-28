@@ -34,6 +34,7 @@ SDL_Texture *shieldTRTex;
 SDL_Texture *scoreBarTex;
 SDL_Texture *splashTex;
 SDL_Texture *readyPromptTex;
+SDL_Texture *arrowTex;
 /* Game font */
 TTF_Font *font;
 
@@ -41,6 +42,7 @@ TTF_Font *font;
 extern SDL_Window *window;
 extern Lift lift;
 extern GameState currentGameState;
+extern char currentMenuSelection;
 
 /* Methods */
 void
@@ -54,6 +56,9 @@ initVideo();
 
 void
 loadAssets();
+
+void
+renderSplashScreen();
 
 void
 render();

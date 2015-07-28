@@ -9,6 +9,10 @@ SDL_Rect scoreBannerRect = {0*SCALING_FACTOR,
     0*SCALING_FACTOR,
     100*SCALING_FACTOR,
     192*SCALING_FACTOR};
+SDL_Rect splashScreenRect = {0*SCALING_FACTOR,
+    0*SCALING_FACTOR,
+    320*SCALING_FACTOR,
+    192*SCALING_FACTOR};
 SDL_Rect destRect = {0,0,0,0};
 SDL_Rect liftShieldDestRect = {0,0,0,0};
 
@@ -107,6 +111,11 @@ loadAssets()
   splashTex = IMG_LoadTexture(renderer,
       "img/Splash.png");
   ASSERT_IMG(splashTex);
+
+  /* Load selection arrow */
+  arrowTex = IMG_LoadTexture(renderer,
+      "res/sprites/arrow.png");
+  ASSERT_IMG(arrowTex);
 
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
@@ -314,11 +323,34 @@ render()
   }
   SDL_RenderPresent(renderer);
 }
+  void
+renderSplashScreen()
+{
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer,
+      splashTex,
+      NULL,
+      &splashScreenRect);
+
+  /* Render the selection arrow */
+  SDL_Rect arrowRect = {80,115,20,21};
+  if (currentMenuSelection == 0)
+    arrowRect.y = 115;
+  else
+    arrowRect.y = 139;
+  scaleDestRect(&arrowRect);
+  SDL_RenderCopy(renderer,
+      arrowTex,
+      NULL,
+      &arrowRect);
+  SDL_RenderPresent(renderer);
+}
 
   void
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(arrowTex);
   SDL_DestroyTexture(splashTex);
   SDL_DestroyTexture(scoreBarTex);
   SDL_DestroyTexture(readyPromptTex);
