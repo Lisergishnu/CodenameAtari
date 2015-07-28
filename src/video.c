@@ -108,7 +108,7 @@ loadAssets()
       "img/Splash.png");
   ASSERT_IMG(splashTex);
 
-  font = TTF_OpenFont( "font/game.ttf",24);
+  font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
 }
@@ -284,19 +284,19 @@ render()
   char str[30];
   sprintf(str,"%d",
       currentGameState.currentScore);
-  PrintText(19*SCALING_FACTOR, 38*SCALING_FACTOR, str);
+  PrintText(55*SCALING_FACTOR, 41*SCALING_FACTOR, str);
   /* Draw current level */
   sprintf(str,"%d",
       currentGameState.currentLevel);
-  PrintText(19*SCALING_FACTOR,67*SCALING_FACTOR, str);
+  PrintText(55*SCALING_FACTOR,170*SCALING_FACTOR, str);
   /* Draw current health */
-  sprintf(str,"Vida:%d",
+  sprintf(str,"%d",
       lift.health);
-  PrintText(19*SCALING_FACTOR,150*SCALING_FACTOR,str);
+  PrintText(55*SCALING_FACTOR,70*SCALING_FACTOR,str);
   /* Draw current people on board */
-  sprintf(str,"People x %d",
+  sprintf(str,"%d",
       currentGameState.peopleRescued);
-  PrintText(19*SCALING_FACTOR,97*SCALING_FACTOR, str);
+  PrintText(55*SCALING_FACTOR,99*SCALING_FACTOR , str);
 
 
   /*Render the "ready" prompt if necesary*/
