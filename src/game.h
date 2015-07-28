@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 // Game logic defines
 // Game space 220x192
@@ -61,8 +62,7 @@ struct __missile
 {
 	int isAlive;
 	FVector position;
-  float m,b; //describe the trayectory
-  int dir; //-1 moves to the left, 1 right
+  double angle;
 } Missile;
 
 typedef

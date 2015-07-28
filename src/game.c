@@ -5,7 +5,7 @@
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
 #define LIFT_SPEED .1f
-#define MISSILE_SPEED .01
+#define MISSILE_SPEED 0.1f
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_PIXEL 50.0f
 #define GAME_SCORE_PER_PERSON 100
@@ -77,7 +77,7 @@ generateMissiles()
   if (currentGameState.onScreenMissileCount <
       MAX_MISSILE_COUNT)
   {
-    int chance = rand() % 10000;
+    int chance = rand() % 100;
     if (chance <= levelMissileProbThreshold)
     {
       int m = 0;
@@ -95,48 +95,39 @@ generateMissiles()
        * 1 |   | 2
        *   =====
        *     3
+       *
+       *  We only use the corners of the screen.
        */
       int side = rand() % 4;
       switch(side)
       {
         case 0:
-          mis->position.x = rand() % WORLD_WIDTH;
+          mis->position.x = rand() % WORLD_WIDTH/2 + WORLD_WIDTH/2;
           mis->position.y = 0;
           break;
         case 1:
           mis->position.x = 0;
-          mis->position.y = rand() % WORLD_HEIGHT;
+          mis->position.y = rand() % WORLD_HEIGHT/2 + WORLD_HEIGHT/2;
           break;
         case 2:
           mis->position.x = WORLD_WIDTH;
-          mis->position.y = rand() % WORLD_HEIGHT;
+          mis->position.y = rand() % WORLD_HEIGHT/2;
           break;
         case 3:
-          mis->position.x = rand() % WORLD_WIDTH;
+          mis->position.x = rand() % WORLD_WIDTH/2;
           mis->position.y = WORLD_HEIGHT;
           break;
       }
       /*
-       * Then we store the factors for a line
-       * equation y = m*x + b so we can then
-       * easly update its trayectorie.
-       * Also we need to define an x direction.
+       * Calculate angle so we can update the
+       * bullet position.
        */
-      int targetx = lift.drawSpace.x + lift.drawSpace.w/2;
-      int targety = lift.drawSpace.y + lift.drawSpace.h/2;
-      if (targetx - mis->position.x)
-      {
-        targetx += 1;
-      }
-      mis->m = (targety - mis->position.y) /
-        ((float) (targetx - mis->position.x));
-      if (mis->m == 0)
-        mis->m = 0.01f;
-      mis->b = mis->position.y - mis->m*mis->position.x;
-      if (targetx > mis->position.x)
-        mis->dir = 1;
-      else
-        mis->dir = -1;
+      int targetx = lift.drawSpace.x;
+      int targety = lift.drawSpace.y;
+      FVector dirVec;
+      dirVec.x = targetx - mis->position.x;
+      dirVec.y = targety - mis->position.y;
+      mis->angle = atan2(dirVec.y,dirVec.x);
     }
   }
 }
@@ -372,11 +363,8 @@ updatePositions(float dt)
     Missile *mi = &currentGameState.missileList[m];
     if (mi->isAlive == 1)
     {
-      mi->position.x = (mi->dir == 1) ?
-        mi->position.x + MISSILE_SPEED*dt:
-        mi->position.x - MISSILE_SPEED*dt;
-      mi->position.y = mi->m*mi->position.x +
-        mi->b;
+      mi->position.x += cos(mi->angle)*MISSILE_SPEED*dt;
+      mi->position.y += sin(mi->angle)*MISSILE_SPEED*dt;
 
       /*
        * If missile leaves screen, mark it as dead.
