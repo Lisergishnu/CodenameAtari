@@ -68,7 +68,7 @@ startNewLevel(int lvl)
 	lift.position.x = lift.drawSpace.x;
 	lift.position.y = lift.drawSpace.y;
 
-	printf("Nivel Cargado: %d", lvl);
+	printf("Nivel Cargado: %d\n", lvl);
 }
 
   void
