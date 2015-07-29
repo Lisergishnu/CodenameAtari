@@ -15,7 +15,8 @@ enum __audioclip
   AC_THEME,
   AC_HIT,
   AC_MENU,
-  AC_SCORING
+  AC_SCORING,
+  AC_LOSS_HEALTH
 } AudioClip;
 
 void

@@ -7,6 +7,7 @@ Mix_Chunk *hit3Snd;
 Mix_Chunk *hit4Snd;
 Mix_Chunk *menuSnd;
 Mix_Chunk *scoringSnd;
+Mix_Chunk *lossHealthSnd;
 
   void
 initAudio()
@@ -41,6 +42,10 @@ hit4Snd = Mix_LoadWAV("snd/hit4.wav");
   /* Load scoring clicking sound */
   scoringSnd = Mix_LoadWAV("snd/scoring.wav");
   ASSERT_AUDIO(scoringSnd);
+
+  /* Load loss health sound */
+  lossHealthSnd = Mix_LoadWAV("snd/lossHealth.wav");
+  ASSERT_AUDIO(lossHealthSnd);
 
 }
 
@@ -77,12 +82,16 @@ playSound(AudioClip c)
     case AC_SCORING:
         Mix_PlayChannel( -1, scoringSnd, 0);
         break;
+    case AC_LOSS_HEALTH:
+        Mix_PlayChannel( -1, lossHealthSnd, 0);
+        break;
   }
 }
 
   void
 cleanupAudio()
 {
+  Mix_FreeChunk(lossHealthSnd);
   Mix_FreeChunk(scoringSnd);
   Mix_FreeChunk(menuSnd);
   Mix_FreeChunk(hit4Snd);

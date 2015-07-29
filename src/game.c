@@ -397,6 +397,7 @@ updatePositions(float dt)
       if (SDL_HasIntersection(&lift.drawSpace, &mir) == SDL_TRUE)
       {
         lift.health -= 1;
+        playSound(AC_LOSS_HEALTH);
         if (lift.health == 0) // Game Over!!
         {
           currentGameState.currentGameScene = GS_GAMEOVER;
