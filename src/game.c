@@ -12,16 +12,19 @@
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
+#define GS_GAMEOVER_MS_BEFORE_MAINMENU 2000.0f
 
 float startTimer;
 char isGoingUphill;
 int levelMissileProbThreshold;
 int displayScoring = 0;
+extern AppScene currentAppScene;
 
 void
 initGameLogic()
 {
   srand(time(NULL));
+  currentGameState.currentScore = 0;
 	startNewLevel(1);
 }
 
@@ -68,6 +71,8 @@ startNewLevel(int lvl)
 	lift.orientation = SP_180;
 	lift.position.x = lift.drawSpace.x;
 	lift.position.y = lift.drawSpace.y;
+
+  isNewHighScore = 0;
 
 	printf("Nivel Cargado: %d\n", lvl);
 }
@@ -183,6 +188,14 @@ update(float dt)
             startNewLevel(currentGameState.currentLevel + 1);
           }
         }
+      }
+      break;
+      case GS_GAMEOVER:
+      startTimer += dt;
+      if (startTimer > GS_GAMEOVER_MS_BEFORE_MAINMENU)
+      {
+        currentAppScene = APPSCENE_MAINMENU;
+        startTimer = 0;
       }
       break;
   }
@@ -359,6 +372,23 @@ updatePositions(float dt)
         mi->isAlive = 0;
         currentGameState.currentScore += GAME_SCORE_PER_BLOCK;
       }       
+
+      /* Now check if it has collided with the player rect */
+      if (SDL_HasIntersection(&lift.drawSpace, &mir) == SDL_TRUE)
+      {
+        lift.health -= 1;
+        if (lift.health == 0) // Game Over!!
+        {
+          currentGameState.currentGameScene = GS_GAMEOVER;
+          if (highScore < currentGameState.currentScore)
+          {
+            highScore = currentGameState.currentScore;
+            isNewHighScore = 1;
+
+          }
+          startTimer = 0;
+        }
+      }
 
       /*
        * If missile leaves screen, mark it as dead.

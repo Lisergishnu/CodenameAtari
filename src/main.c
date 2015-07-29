@@ -7,18 +7,7 @@
 #include "video.h"
 #include "game.h"
 
-typedef
-enum
-appscenes
-{
-	APPSCENE_INTRO,
-	APPSCENE_MAINMENU,
-	APPSCENE_GAMEPLAY,
-	APPSCENE_GAMEOVER
-} AppScene;
-
-// Global Variables
-AppScene currentScene = APPSCENE_MAINMENU;
+AppScene currentAppScene = APPSCENE_MAINMENU;
 SDL_Window *window = NULL;
 SDL_Surface *surface = NULL;
 int isGameRunning = 1;
@@ -50,7 +39,6 @@ init()
 		}
 		else
 		{
-			initGameLogic();
 			initVideo();
 		}
 	}
@@ -78,7 +66,7 @@ main(int argc, char *argv[])
 		int thisTick = SDL_GetTicks();
 		float dt = (float) (thisTick - lastTick);
 		lastTick = thisTick;
-		switch (currentScene)
+		switch (currentAppScene)
 		{
 			case APPSCENE_INTRO:
 				//Handle events on queue
@@ -110,7 +98,10 @@ main(int argc, char *argv[])
                 break;
               case SDLK_RETURN:
                 if (currentMenuSelection == 0)
-                  currentScene = APPSCENE_GAMEPLAY;
+                {
+                  currentAppScene = APPSCENE_GAMEPLAY;
+          			initGameLogic();
+          		}
                 else
                   isGameRunning = 0;
                 break;

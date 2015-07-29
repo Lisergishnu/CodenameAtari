@@ -35,6 +35,8 @@ SDL_Texture *scoreBarTex;
 SDL_Texture *splashTex;
 SDL_Texture *readyPromptTex;
 SDL_Texture *arrowTex;
+SDL_Texture *gameOverTex;
+SDL_Texture *hiscoreTex;
 /* Game font */
 TTF_Font *font;
 

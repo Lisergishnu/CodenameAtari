@@ -15,6 +15,14 @@ SDL_Rect splashScreenRect = {0*SCALING_FACTOR,
     192*SCALING_FACTOR};
 SDL_Rect destRect = {0,0,0,0};
 SDL_Rect liftShieldDestRect = {0,0,0,0};
+SDL_Rect gameOverRect = {60*SCALING_FACTOR,
+  87*SCALING_FACTOR,
+  200*SCALING_FACTOR,
+  40*SCALING_FACTOR};
+SDL_Rect hiscoreRect = {85*SCALING_FACTOR,
+40*SCALING_FACTOR,
+150*SCALING_FACTOR,
+30*SCALING_FACTOR};
 
 void
 scaleDestRect(SDL_Rect *rect)
@@ -116,6 +124,14 @@ loadAssets()
   arrowTex = IMG_LoadTexture(renderer,
       "res/sprites/arrow.png");
   ASSERT_IMG(arrowTex);
+
+  /* Load end game textures */
+  gameOverTex = IMG_LoadTexture(renderer,
+   "res/sprites/gameover.png");
+  ASSERT_IMG(gameOverTex);
+  hiscoreTex = IMG_LoadTexture(renderer,
+   "res/sprites/hiscore.png");
+  ASSERT_IMG(hiscoreTex);
 
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
@@ -329,6 +345,21 @@ render()
         NULL,
         &destRect);
   }
+
+  /* Render end game images if necesarry */
+  if (currentGameState.currentGameScene == GS_GAMEOVER)
+  {
+    SDL_RenderCopy(renderer,
+        gameOverTex, 
+        NULL, 
+        &gameOverRect);
+    if (isNewHighScore)
+      SDL_RenderCopy(renderer,
+        hiscoreTex, 
+        NULL, 
+        &hiscoreRect);
+  }
+
   SDL_RenderPresent(renderer);
 }
   void
@@ -358,6 +389,8 @@ renderSplashScreen()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(hiscoreTex);
+  SDL_DestroyTexture(gameOverTex);
   SDL_DestroyTexture(arrowTex);
   SDL_DestroyTexture(splashTex);
   SDL_DestroyTexture(scoreBarTex);

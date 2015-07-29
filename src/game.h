@@ -70,7 +70,8 @@ enum __gamescene
 {
 	GS_START,
 	GS_PLAYING,
-	GS_SCORING
+	GS_SCORING,
+	GS_GAMEOVER
 } GameScene;
 
 /* The whole game state is contained in this struct */
@@ -112,10 +113,21 @@ struct __lift
 	Vector position;
 } Lift;
 
-// Global variables
+typedef
+enum
+appscenes
+{
+	APPSCENE_INTRO,
+	APPSCENE_MAINMENU,
+	APPSCENE_GAMEPLAY,
+	APPSCENE_GAMEOVER
+} AppScene;
+
+// Global Variables
 GameState currentGameState;
 Lift lift;
-
+int highScore;
+int isNewHighScore;
 // Methods
 
 void
