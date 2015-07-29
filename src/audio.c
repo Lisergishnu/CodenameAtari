@@ -9,6 +9,7 @@ Mix_Chunk *menuSnd;
 Mix_Chunk *scoringSnd;
 Mix_Chunk *lossHealthSnd;
 Mix_Chunk *climbSnd;
+Mix_Chunk *powerupSnd;
 
   void
 initAudio()
@@ -51,6 +52,10 @@ hit4Snd = Mix_LoadWAV("snd/hit4.wav");
   /* Load climbing sound */
   climbSnd = Mix_LoadWAV("snd/climb.wav");
   ASSERT_AUDIO(climbSnd);
+
+  /* Load powerup sound */
+  powerupSnd = Mix_LoadWAV("snd/powerup.wav");
+  ASSERT_AUDIO(powerupSnd);
 }
 
 void
@@ -92,12 +97,16 @@ playSound(AudioClip c)
     case AC_CLIMB:
         Mix_PlayChannel( -1, climbSnd, 0);
         break;
+    case AC_POWERUP:
+        Mix_PlayChannel( -1, powerupSnd, 0);
+        break;
   }
 }
 
   void
 cleanupAudio()
 {
+  Mix_FreeChunk(powerupSnd);
   Mix_FreeChunk(climbSnd);
   Mix_FreeChunk(lossHealthSnd);
   Mix_FreeChunk(scoringSnd);

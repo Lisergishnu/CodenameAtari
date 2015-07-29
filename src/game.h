@@ -67,6 +67,22 @@ struct __missile
 } Missile;
 
 typedef
+enum __poweruptype
+{
+  PT_REPAIR,
+  PT_ULTIMATE
+} PowerupType;
+
+typedef
+struct __powerups
+{
+  int isAlive;
+  PowerupType type;
+  FVector position;
+  double angle;
+} Powerup;
+
+typedef
 enum __gamescene
 {
 	GS_START,
@@ -87,7 +103,7 @@ struct __gamestates
 	int peopleRescued;
 
 	Missile missileList[MAX_MISSILE_COUNT];
-
+  Powerup onScreenPowerup;
 	Vector botBase;
 	Vector topBase;
 	Vector liftPosition;

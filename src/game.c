@@ -8,7 +8,7 @@
 #define GAME_SCORE_PER_BLOCK 1.0f
 #define GAME_SCORE_PER_LIFE 50
 #define GS_READY_SCREEN_TIMER 2500.0f
-#define GAME_MS_PER_LIFT_MOVEMENT 250.0f
+#define GAME_MS_PER_LIFT_MOVEMENT 350.0f
 #define GAME_MS_PER_MISSILE 10000.0f
 #define GAME_MS_PER_STOP 3000.0f
 #define GAME_MS_PER_STALL 500.0f
@@ -44,6 +44,7 @@ startNewLevel(int lvl)
   currentGameState.onScreenMissileCount = 10;
   currentGameState.currentGameScene = GS_START;
   currentGameState.peopleRescued = 2 + lvl*0.50;
+  currentGameState.onScreenPowerup.isAlive = 0;
 
   startTimer = 0;
   /*
@@ -140,6 +141,68 @@ generateMissiles()
 }
 
   void
+generatePowerup()
+{
+  if (currentGameState.onScreenPowerup.isAlive == 1)
+    return;
+
+  /*
+   * Per call, there is a 5% chance to drop a powerup
+   */
+  int p = rand() % 50;
+  if (p != 0)
+    return;
+
+  Powerup *pw = &currentGameState.onScreenPowerup;
+  pw->isAlive = 1;
+
+  char pwt = rand() % 2;
+  switch (pwt)
+  {
+    case 0:
+      pw->type = PT_REPAIR;
+      break;
+    case 1:
+      pw->type = PT_ULTIMATE;
+      break;
+  }
+
+  /* 
+   * We use the same principle as missiles to fire them. 
+   */
+  int side = rand() % 4;
+  switch(side)
+  {
+    case 0:
+      pw->position.x = rand() % WORLD_WIDTH/2 + WORLD_WIDTH/2;
+      pw->position.y = 0;
+      break;
+    case 1:
+      pw->position.x = 0;
+      pw->position.y = rand() % WORLD_HEIGHT/2 + WORLD_HEIGHT/2;
+      break;
+    case 2:
+      pw->position.x = WORLD_WIDTH;
+      pw->position.y = rand() % WORLD_HEIGHT/2;
+      break;
+    case 3:
+      pw->position.x = rand() % WORLD_WIDTH/2;
+      pw->position.y = WORLD_HEIGHT;
+      break;
+  }
+  /*
+   * Calculate angle so we can update the
+   * bullet position.
+   */
+  int targetx = lift.drawSpace.x + 12;
+  int targety = lift.drawSpace.y + 12;
+  FVector dirVec;
+  dirVec.x = targetx - pw->position.x;
+  dirVec.y = targety - pw->position.y;
+  pw->angle = atan2(dirVec.y,dirVec.x);
+}
+
+  void
 update(float dt)
 {
   switch(currentGameState.currentGameScene)
@@ -157,6 +220,7 @@ update(float dt)
       if (missileGenTimer > GAME_MS_PER_MISSILE/missileFreq)
       {
         generateMissiles();
+        generatePowerup();
         missileGenTimer = 0;
       }
       updatePositions(dt);
@@ -463,6 +527,66 @@ updatePositions(float dt)
         mi->isAlive = 0;
     }
   }
+  /* Now we repeat the process if theres a powerup on the screen */
+
+    Powerup *pwrup = &currentGameState.onScreenPowerup;
+    if (pwrup->isAlive == 1)
+    {
+      pwrup->position.x += cos(pwrup->angle)*MISSILE_SPEED*dt;
+      pwrup->position.y += sin(pwrup->angle)*MISSILE_SPEED*dt;
+
+      /*
+       * Consider if the current missile has collided
+       * with the shield
+       */
+
+      SDL_Rect r = getShieldRect();
+      SDL_Rect mir;
+      mir.x = pwrup->position.x;
+      mir.y = pwrup->position.y;
+      mir.w = 4;
+      mir.h = 4;
+
+      if (SDL_HasIntersection(&r, &mir) == SDL_TRUE)
+      {
+        pwrup->isAlive = 0;
+        currentGameState.currentScore += GAME_SCORE_PER_BLOCK;
+        playSound(AC_HIT);
+      }
+
+      /* Now check if it has collided with the player rect */
+      if (SDL_HasIntersection(&lift.drawSpace, &mir) == SDL_TRUE)
+      {
+        playSound(AC_POWERUP);
+        switch (pwrup->type)
+        {
+          case PT_REPAIR:
+            lift.health = 3;
+            break;
+          case PT_ULTIMATE:
+            /* Clear all missiles on screen */
+              for (m = 0;
+              m < MAX_MISSILE_COUNT;
+              m++)
+              {
+                  currentGameState.missileList[m].isAlive = 0; 
+              }
+            break;
+        }
+        pwrup->isAlive = 0;
+      }
+
+      /*
+       * If missile leaves screen, mark it as dead.
+       */
+
+      if ((pwrup->position.x >= WORLD_WIDTH) ||
+          (pwrup->position.x <= 0) ||
+          (pwrup->position.y >= WORLD_HEIGHT) ||
+          (pwrup->position.y <= 0))
+        pwrup->isAlive = 0;
+    }
+  
 }
 
   void

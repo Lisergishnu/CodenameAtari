@@ -40,6 +40,8 @@ SDL_Texture *gameOverTex;
 SDL_Texture *hiscoreTex;
 SDL_Texture *introTex;
 SDL_Texture *creditsTex;
+SDL_Texture *powerupUltTex;
+SDL_Texture *powerupRepTex;
 /* Game font */
 TTF_Font *font;
 

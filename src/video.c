@@ -148,6 +148,14 @@ loadAssets()
       "img/credits.png");
   ASSERT_IMG(creditsTex);
 
+  /* Load powerup textures */
+  powerupUltTex = IMG_LoadTexture(renderer,
+      "res/sprites/PUltimate.png");
+  ASSERT_IMG(powerupUltTex);
+  powerupRepTex = IMG_LoadTexture(renderer,
+      "res/sprites/PReparacion.png");
+  ASSERT_IMG(powerupRepTex);
+
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
@@ -267,6 +275,35 @@ renderMissiles()
         &missileRect);
   }
 }
+void
+renderPowerups()
+{
+  SDL_Rect powerupRect;
+  if (currentGameState.onScreenPowerup.isAlive == 1)
+  {
+    powerupRect.x = (int) (currentGameState.onScreenPowerup.position.x) 
+              + 100;
+    powerupRect.y = (int) (currentGameState.onScreenPowerup.position.y); 
+    powerupRect.w = 4;
+    powerupRect.h = 4;
+
+    scaleDestRect(&powerupRect);
+    SDL_Texture *cTex;
+    switch (currentGameState.onScreenPowerup.type)
+    {
+      case PT_REPAIR:
+        cTex = powerupRepTex;
+        break;
+      case PT_ULTIMATE:
+        cTex = powerupUltTex;
+        break;
+    }
+    SDL_RenderCopy(renderer,
+      cTex , 
+      NULL,
+      &powerupRect);   
+  }
+}
 
   void
 render()
@@ -326,6 +363,7 @@ render()
       &destRect);
 
   renderMissiles();
+  renderPowerups();
   updateAndRenderShield();
 
   /* Draw score bar at left */
@@ -438,6 +476,8 @@ renderCredits()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(powerupRepTex);
+  SDL_DestroyTexture(powerupUltTex);
   SDL_DestroyTexture(creditsTex);
   SDL_DestroyTexture(introTex);
   SDL_DestroyTexture(railTex);
