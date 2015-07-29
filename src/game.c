@@ -30,7 +30,7 @@ initGameLogic()
 {
   srand(time(NULL));
   currentGameState.currentScore = 0;
-  startNewLevel(1);
+  startNewLevel(3);
 }
 
   void
@@ -412,6 +412,7 @@ updateLiftPosition(float dt)
       if (prob < 6*currentGameState.currentLevel)
       {
         liftCurrentlyStalled = 1;
+        playSound(AC_BREAKDOWN);
       }
       liftStopTimer = 0;
     }
@@ -586,7 +587,6 @@ updatePositions(float dt)
           (pwrup->position.y <= 0))
         pwrup->isAlive = 0;
     }
-  
 }
 
   void
