@@ -10,6 +10,8 @@
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_LIFT_MOVEMENT 250.0f
 #define GAME_MS_PER_MISSILE 10000.0f
+#define GAME_MS_PER_STOP 3000.0f
+#define GAME_MS_PER_STALL 500.0f
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
@@ -21,6 +23,7 @@ int displayScoring = 0;
 extern AppScene currentAppScene;
 float missileGenTimer = 0.0f;
 float missileFreq = 1.0f;
+char liftCurrentlyStalled = 0;
 
   void
 initGameLogic()
@@ -47,7 +50,7 @@ startNewLevel(int lvl)
    * Each level the frequency of missiles
    * increases.
    */
-  missileFreq = 2*lvl;
+  missileFreq = 4 + 2*lvl;
   initializeMissiles();
 
   if (lvl%2 == 1)
@@ -319,11 +322,10 @@ initializeMissiles()
   }
 }
 
-  void
-updatePositions(float dt)
+void
+updateLiftPosition(float dt) 
 {
-  /* Update lift position */
-  /* We need to stall the position until at least
+ /* We need to stall the position until at least
    * one second since our timer resoultion
    * doesn't allow for slow movement.
    * */
@@ -332,36 +334,75 @@ updatePositions(float dt)
    * at destination. In that case we proceed to
    * the scoring phase.
    */
-  static float liftMovementTimer = 0.0f;
-  if (liftMovementTimer >= GAME_MS_PER_LIFT_MOVEMENT)
+  /*
+   * Also theres the possibility that in each
+   * night level, the lift can stop suddenly
+   * for some time.
+   */
+  if (currentGameState.currentLevel % 3 == 0)
   {
-    if (isGoingUphill)
+    static float liftStopTimer = 0.0f;
+    if (liftStopTimer >= GAME_MS_PER_STOP)
     {
-      lift.drawSpace.x -= 1;
+      char prob = rand() % 100;
+      if (prob < 6*currentGameState.currentLevel)
+      {
+        liftCurrentlyStalled = 1;
+      }
+      liftStopTimer = 0;
     }
     else
     {
-      lift.drawSpace.x += 1;
-    }
-
-    lift.drawSpace.y = lift.drawSpace.x*0.9937 -
-      21.8038;
-    liftMovementTimer = 0.0f;
-    if ((isGoingUphill &&
-          lift.drawSpace.x <= LIFT_STARTING_POS_TOP_X &&
-          lift.drawSpace.y <= LIFT_STARTING_POS_TOP_Y) ||
-        (!isGoingUphill &&
-         lift.drawSpace.x >= LIFT_STARTING_POS_BOT_X &&
-         lift.drawSpace.y >= LIFT_STARTING_POS_BOT_Y))
-    {
-      currentGameState.currentGameScene = GS_SCORING;
-      startTimer = 0;
+      if (liftCurrentlyStalled &&
+          liftStopTimer >= GAME_MS_PER_STALL*currentGameState.currentLevel)
+      {
+        liftCurrentlyStalled = 0;
+        liftStopTimer = 0;
+      }
+      liftStopTimer += dt;
     }
   }
-  else
+  static float liftMovementTimer = 0.0f;
+  if (liftCurrentlyStalled == 0)
   {
-    liftMovementTimer += dt;
+    if (liftMovementTimer >= GAME_MS_PER_LIFT_MOVEMENT)
+    {
+      playSound(AC_CLIMB);
+      if (isGoingUphill)
+      {
+        lift.drawSpace.x -= 1;
+      }
+      else
+      {
+        lift.drawSpace.x += 1;
+      }
+
+      lift.drawSpace.y = lift.drawSpace.x*0.9937 -
+        21.8038;
+      liftMovementTimer = 0.0f;
+      if ((isGoingUphill &&
+            lift.drawSpace.x <= LIFT_STARTING_POS_TOP_X &&
+            lift.drawSpace.y <= LIFT_STARTING_POS_TOP_Y) ||
+          (!isGoingUphill &&
+           lift.drawSpace.x >= LIFT_STARTING_POS_BOT_X &&
+           lift.drawSpace.y >= LIFT_STARTING_POS_BOT_Y))
+      {
+        currentGameState.currentGameScene = GS_SCORING;
+        startTimer = 0;
+      }
+    }
+    else
+    {
+      liftMovementTimer += dt;
+    }
   }
+}
+
+  void
+updatePositions(float dt)
+{
+  /* Update lift position */
+  updateLiftPosition(dt);
   /* Update missile positions */
   int m;
   for (m = 0;
