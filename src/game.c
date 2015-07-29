@@ -7,6 +7,7 @@
 #define MISSILE_SPEED 0.05f
 #define GAME_SCORE_PER_BLOCK 1.0f
 #define GAME_SCORE_PER_LIFE 50
+#define GAME_SCORE_PER_POWERUP 50
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_LIFT_MOVEMENT 350.0f
 #define GAME_MS_PER_MISSILE 10000.0f
@@ -30,7 +31,7 @@ initGameLogic()
 {
   srand(time(NULL));
   currentGameState.currentScore = 0;
-  startNewLevel(2);
+  startNewLevel(1);
 }
 
   void
@@ -578,6 +579,7 @@ updatePositions(float dt)
               }
             break;
         }
+        currentGameState.currentScore += GAME_SCORE_PER_POWERUP;
         pwrup->isAlive = 0;
       }
 
