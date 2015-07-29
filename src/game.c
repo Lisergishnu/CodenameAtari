@@ -57,17 +57,18 @@ startNewLevel(int lvl)
     isGoingUphill = 1;
     lift.drawSpace.x = LIFT_STARTING_POS_BOT_X;
     lift.drawSpace.y = LIFT_STARTING_POS_BOT_Y;
+    lift.orientation = SP_180;
   }
   else
   {
     isGoingUphill = 0;
     lift.drawSpace.x = LIFT_STARTING_POS_TOP_X;
     lift.drawSpace.y = LIFT_STARTING_POS_TOP_Y;
+    lift.orientation = SP_0;
   }
   lift.health = 3;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
-	lift.orientation = SP_180;
 	lift.position.x = lift.drawSpace.x;
 	lift.position.y = lift.drawSpace.y;
 

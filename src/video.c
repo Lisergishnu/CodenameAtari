@@ -392,6 +392,12 @@ renderSplashScreen()
       arrowTex,
       NULL,
       &arrowRect);
+
+  /* Render the hiscore text */
+  char str[50];
+  sprintf(str,"HI-SCORE: %06d",highScore);
+  PrintText(105*SCALING_FACTOR,10*SCALING_FACTOR,str);
+
   SDL_RenderPresent(renderer);
 }
 
