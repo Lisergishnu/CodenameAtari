@@ -89,7 +89,6 @@ struct __gamestates
 
 	Vector botBase;
 	Vector topBase;
-	
 	Vector liftPosition;
 	GameScene currentGameScene;
 } GameState;

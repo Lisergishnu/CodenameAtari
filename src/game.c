@@ -9,6 +9,7 @@
 #define GAME_SCORE_PER_LIFE 50
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_LIFT_MOVEMENT 250.0f
+#define GAME_MS_PER_MISSILE 10000.0f
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
@@ -16,9 +17,10 @@
 
 float startTimer;
 char isGoingUphill;
-int levelMissileProbThreshold;
 int displayScoring = 0;
 extern AppScene currentAppScene;
+float missileGenTimer = 0.0f;
+float missileFreq = 1.0f;
 
   void
 initGameLogic()
@@ -42,15 +44,10 @@ startNewLevel(int lvl)
 
   startTimer = 0;
   /*
-   * As levels are from increasing dificulty
-   * the probability of having a missile
-   * launched at the player also increases
-   *
-   * Value ranges from 0 to 99. If >= 100
-   * missles always launch.
+   * Each level the frequency of missiles
+   * increases.
    */
-  levelMissileProbThreshold = 5 + 5*lvl;
-
+  missileFreq = 2*lvl;
   initializeMissiles();
 
   if (lvl%2 == 1)
@@ -81,62 +78,62 @@ startNewLevel(int lvl)
   void
 generateMissiles()
 {
-  if (currentGameState.onScreenMissileCount <
-      MAX_MISSILE_COUNT)
+  /*
+   * To keep game somewhat unpredictable,
+   * only 2 of 3 missiles get launched
+   */
+  int p = rand() % 3;
+  if (p == 2)
+    return;
+
+  int m = 0;
+  while (currentGameState.missileList[m].isAlive == 1)
+    m++;
+  if (m >= MAX_MISSILE_COUNT)
+    return;
+  Missile *mis = &currentGameState.missileList[m];
+  mis->isAlive = 1;
+  /* First we select randomly one side of
+   * the screen to appear in.
+   *
+   *     0
+   *   =====
+   * 1 |   | 2
+   *   =====
+   *     3
+   *
+   *  We only use the corners of the screen.
+   */
+  int side = rand() % 4;
+  switch(side)
   {
-    int chance = rand() % 10000;
-    if (chance <= levelMissileProbThreshold)
-    {
-      int m = 0;
-      while (currentGameState.missileList[m].isAlive == 1)
-        m++;
-      if (m >= MAX_MISSILE_COUNT)
-        return;
-      Missile *mis = &currentGameState.missileList[m];
-      mis->isAlive = 1;
-      /* First we select randomly one side of
-       * the screen to appear in.
-       *
-       *     0
-       *   =====
-       * 1 |   | 2
-       *   =====
-       *     3
-       *
-       *  We only use the corners of the screen.
-       */
-      int side = rand() % 4;
-      switch(side)
-      {
-        case 0:
-          mis->position.x = rand() % WORLD_WIDTH/2 + WORLD_WIDTH/2;
-          mis->position.y = 0;
-          break;
-        case 1:
-          mis->position.x = 0;
-          mis->position.y = rand() % WORLD_HEIGHT/2 + WORLD_HEIGHT/2;
-          break;
-        case 2:
-          mis->position.x = WORLD_WIDTH;
-          mis->position.y = rand() % WORLD_HEIGHT/2;
-          break;
-        case 3:
-          mis->position.x = rand() % WORLD_WIDTH/2;
-          mis->position.y = WORLD_HEIGHT;
-          break;
-      }
-      /*
-       * Calculate angle so we can update the
-       * bullet position.
-       */
-      int targetx = lift.drawSpace.x + 12;
-      int targety = lift.drawSpace.y + 12;
-      FVector dirVec;
-      dirVec.x = targetx - mis->position.x;
-      dirVec.y = targety - mis->position.y;
-      mis->angle = atan2(dirVec.y,dirVec.x);
-    }
+    case 0:
+      mis->position.x = rand() % WORLD_WIDTH/2 + WORLD_WIDTH/2;
+      mis->position.y = 0;
+      break;
+    case 1:
+      mis->position.x = 0;
+      mis->position.y = rand() % WORLD_HEIGHT/2 + WORLD_HEIGHT/2;
+      break;
+    case 2:
+      mis->position.x = WORLD_WIDTH;
+      mis->position.y = rand() % WORLD_HEIGHT/2;
+      break;
+    case 3:
+      mis->position.x = rand() % WORLD_WIDTH/2;
+      mis->position.y = WORLD_HEIGHT;
+      break;
   }
+  /*
+   * Calculate angle so we can update the
+   * bullet position.
+   */
+  int targetx = lift.drawSpace.x + 12;
+  int targety = lift.drawSpace.y + 12;
+  FVector dirVec;
+  dirVec.x = targetx - mis->position.x;
+  dirVec.y = targety - mis->position.y;
+  mis->angle = atan2(dirVec.y,dirVec.x);
 }
 
   void
@@ -153,7 +150,12 @@ update(float dt)
       }
       break;
     case GS_PLAYING:
-      generateMissiles();
+      missileGenTimer += dt;
+      if (missileGenTimer > GAME_MS_PER_MISSILE/missileFreq)
+      {
+        generateMissiles();
+        missileGenTimer = 0;
+      }
       updatePositions(dt);
       break;
     case GS_SCORING:
@@ -166,6 +168,7 @@ update(float dt)
       startTimer += dt;
       if (startTimer > GS_SCORING_MS_PER_TICK)
       {
+
         if (lift.health > 0)
         {
           if (displayScoring <= 0)
