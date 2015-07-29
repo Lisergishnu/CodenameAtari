@@ -6,6 +6,7 @@
 #define LIFT_STARTING_POS_BOT_Y 166
 #define MISSILE_SPEED 0.05f
 #define GAME_SCORE_PER_BLOCK 1.0f
+#define GAME_SCORE_PER_LIFE 50
 #define GS_READY_SCREEN_TIMER 2500.0f
 #define GAME_MS_PER_LIFT_MOVEMENT 250.0f
 #define GAME_SCORE_PER_PERSON 20
@@ -19,25 +20,25 @@ int levelMissileProbThreshold;
 int displayScoring = 0;
 extern AppScene currentAppScene;
 
-void
+  void
 initGameLogic()
 {
   srand(time(NULL));
   currentGameState.currentScore = 0;
-	startNewLevel(1);
+  startNewLevel(1);
 }
 
-void
+  void
 startNewLevel(int lvl)
 {
-	currentGameState.currentLevel = lvl;
-	currentGameState.topBase.x = 24;
-	currentGameState.topBase.y = 6;
-	currentGameState.botBase.x = 196;
-	currentGameState.botBase.y = 168;
-	currentGameState.onScreenMissileCount = 10;
+  currentGameState.currentLevel = lvl;
+  currentGameState.topBase.x = 24;
+  currentGameState.topBase.y = 6;
+  currentGameState.botBase.x = 196;
+  currentGameState.botBase.y = 168;
+  currentGameState.onScreenMissileCount = 10;
   currentGameState.currentGameScene = GS_START;
-  currentGameState.peopleRescued = 2 + lvl*0.34;
+  currentGameState.peopleRescued = 2 + lvl*0.50;
 
   startTimer = 0;
   /*
@@ -48,9 +49,9 @@ startNewLevel(int lvl)
    * Value ranges from 0 to 99. If >= 100
    * missles always launch.
    */
-  levelMissileProbThreshold = 10 + 20*lvl;
+  levelMissileProbThreshold = 5 + 5*lvl;
 
-	initializeMissiles();
+  initializeMissiles();
 
   if (lvl%2 == 1)
   {
@@ -69,12 +70,12 @@ startNewLevel(int lvl)
   lift.health = 3;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
-	lift.position.x = lift.drawSpace.x;
-	lift.position.y = lift.drawSpace.y;
+  lift.position.x = lift.drawSpace.x;
+  lift.position.y = lift.drawSpace.y;
 
   isNewHighScore = 0;
 
-	printf("Nivel Cargado: %d\n", lvl);
+  printf("Nivel Cargado: %d\n", lvl);
 }
 
   void
@@ -128,8 +129,8 @@ generateMissiles()
        * Calculate angle so we can update the
        * bullet position.
        */
-      int targetx = lift.drawSpace.x;
-      int targety = lift.drawSpace.y;
+      int targetx = lift.drawSpace.x + 12;
+      int targety = lift.drawSpace.y + 12;
       FVector dirVec;
       dirVec.x = targetx - mis->position.x;
       dirVec.y = targety - mis->position.y;
@@ -168,10 +169,10 @@ update(float dt)
       startTimer += dt;
       if (startTimer > GS_SCORING_MS_PER_TICK)
       {
-        if (currentGameState.peopleRescued > 0)
+        if (lift.health > 0)
         {
           if (displayScoring <= 0)
-            displayScoring = GAME_SCORE_PER_PERSON;
+            displayScoring = GAME_SCORE_PER_LIFE;
           else
           {
             currentGameState.currentScore += 5;
@@ -179,18 +180,34 @@ update(float dt)
             startTimer = 0;
           }
           if (displayScoring <= 0)
-            currentGameState.peopleRescued -= 1;
+            lift.health -= 1;
         }
         else
         {
-          if (startTimer > GS_SCORING_MS_BEFORE_NEXT_LEVEL)
+          if (currentGameState.peopleRescued > 0)
           {
-            startNewLevel(currentGameState.currentLevel + 1);
+            if (displayScoring <= 0)
+              displayScoring = GAME_SCORE_PER_PERSON;
+            else
+            {
+              currentGameState.currentScore += 5;
+              displayScoring -= 5;
+              startTimer = 0;
+            }
+            if (displayScoring <= 0)
+              currentGameState.peopleRescued -= 1;
+          }
+          else
+          {
+            if (startTimer > GS_SCORING_MS_BEFORE_NEXT_LEVEL)
+            {
+              startNewLevel(currentGameState.currentLevel + 1);
+            }
           }
         }
       }
       break;
-      case GS_GAMEOVER:
+    case GS_GAMEOVER:
       startTimer += dt;
       if (startTimer > GS_GAMEOVER_MS_BEFORE_MAINMENU)
       {
@@ -287,20 +304,20 @@ handleGameInput(SDL_Event e)
 
 }
 
-void
+  void
 initializeMissiles()
 {
-	int i;
-	for(i=0;
+  int i;
+  for(i=0;
       i<MAX_MISSILE_COUNT;
       i++){
-		currentGameState.missileList[i].isAlive = 0;
-		currentGameState.missileList[i].position.x = 0;
-		currentGameState.missileList[i].position.y = 0;
-	}
+    currentGameState.missileList[i].isAlive = 0;
+    currentGameState.missileList[i].position.x = 0;
+    currentGameState.missileList[i].position.y = 0;
+  }
 }
 
-void
+  void
 updatePositions(float dt)
 {
   /* Update lift position */
@@ -355,7 +372,7 @@ updatePositions(float dt)
       mi->position.x += cos(mi->angle)*MISSILE_SPEED*dt;
       mi->position.y += sin(mi->angle)*MISSILE_SPEED*dt;
 
-      /* 
+      /*
        * Consider if the current missile has collided
        * with the shield
        */
@@ -371,7 +388,7 @@ updatePositions(float dt)
       {
         mi->isAlive = 0;
         currentGameState.currentScore += GAME_SCORE_PER_BLOCK;
-      }       
+      }
 
       /* Now check if it has collided with the player rect */
       if (SDL_HasIntersection(&lift.drawSpace, &mir) == SDL_TRUE)
