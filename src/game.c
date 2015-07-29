@@ -30,7 +30,7 @@ initGameLogic()
 {
   srand(time(NULL));
   currentGameState.currentScore = 0;
-  startNewLevel(3);
+  startNewLevel(2);
 }
 
   void
@@ -132,8 +132,10 @@ generateMissiles()
    * Calculate angle so we can update the
    * bullet position.
    */
-  int targetx = lift.drawSpace.x + 12;
-  int targety = lift.drawSpace.y + 12;
+  int targetx = (isGoingUphill) ? lift.drawSpace.x :
+    lift.drawSpace.x + 24;
+  int targety = (isGoingUphill) ? lift.drawSpace.y :
+   lift.drawSpace.y + 24;
   FVector dirVec;
   dirVec.x = targetx - mis->position.x;
   dirVec.y = targety - mis->position.y;
@@ -194,8 +196,10 @@ generatePowerup()
    * Calculate angle so we can update the
    * bullet position.
    */
-  int targetx = lift.drawSpace.x + 12;
-  int targety = lift.drawSpace.y + 12;
+  int targetx = (isGoingUphill) ? lift.drawSpace.x :
+    lift.drawSpace.x + 24;
+  int targety = (isGoingUphill) ? lift.drawSpace.y :
+   lift.drawSpace.y + 24;
   FVector dirVec;
   dirVec.x = targetx - pw->position.x;
   dirVec.y = targety - pw->position.y;
