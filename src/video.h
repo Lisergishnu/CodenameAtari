@@ -20,6 +20,7 @@ SDL_Texture *gamebkgMorningTex;
 SDL_Texture *gamebkgDayTex;
 SDL_Texture *gamebkgNightTex;
 SDL_Texture *liftTex;
+SDL_Texture *railTex;
 SDL_Texture *topBaseTex;
 SDL_Texture *bottomBaseTex;
 SDL_Texture *bulletTex;

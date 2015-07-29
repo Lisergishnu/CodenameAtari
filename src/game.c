@@ -1,13 +1,13 @@
 #include "game.h"
 
-#define LIFT_STARTING_POS_TOP_X 4
-#define LIFT_STARTING_POS_TOP_Y 36
+#define LIFT_STARTING_POS_TOP_X 31
+#define LIFT_STARTING_POS_TOP_Y 9
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
-#define MISSILE_SPEED 0.1f
+#define MISSILE_SPEED 0.05f
 #define GAME_SCORE_PER_BLOCK 1.0f
 #define GS_READY_SCREEN_TIMER 2500.0f
-#define GAME_MS_PER_LIFT_MOVEMENT 500.0f
+#define GAME_MS_PER_LIFT_MOVEMENT 250.0f
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
@@ -31,8 +31,8 @@ void
 startNewLevel(int lvl)
 {
 	currentGameState.currentLevel = lvl;
-	currentGameState.topBase.x = 1;
-	currentGameState.topBase.y = 35;
+	currentGameState.topBase.x = 24;
+	currentGameState.topBase.y = 6;
 	currentGameState.botBase.x = 196;
 	currentGameState.botBase.y = 168;
 	currentGameState.onScreenMissileCount = 10;
@@ -324,8 +324,8 @@ updatePositions(float dt)
       lift.drawSpace.x += 1;
     }
 
-    lift.drawSpace.y = lift.drawSpace.x*0.7027 +
-      33.1892;
+    lift.drawSpace.y = lift.drawSpace.x*0.9937 -
+      21.8038;
     liftMovementTimer = 0.0f;
     if ((isGoingUphill &&
           lift.drawSpace.x <= LIFT_STARTING_POS_TOP_X &&

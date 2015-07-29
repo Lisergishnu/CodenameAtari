@@ -133,6 +133,11 @@ loadAssets()
    "res/sprites/hiscore.png");
   ASSERT_IMG(hiscoreTex);
 
+  /* Load rail */
+  railTex = IMG_LoadTexture(renderer,
+      "img/riel.png");
+  ASSERT_IMG(railTex);
+
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
@@ -276,6 +281,18 @@ render()
       currentBKG,
       NULL,
       &bkgRect);
+  SDL_RenderCopy(renderer,
+      railTex,
+      NULL,
+      &bkgRect);
+  /* Draw lift */
+  destRect = lift.drawSpace;
+  destRect.x += 100;
+    scaleDestRect(&destRect);
+  SDL_RenderCopy(renderer,
+      liftTex,
+      NULL,
+      &destRect);
   /* Draw top base */
   destRect.x = 100 + currentGameState.topBase.x;
   destRect.y = currentGameState.topBase.y;
@@ -284,14 +301,6 @@ render()
     scaleDestRect(&destRect);
   SDL_RenderCopy(renderer,
       topBaseTex,
-      NULL,
-      &destRect);
-  /* Draw lift */
-  destRect = lift.drawSpace;
-  destRect.x += 100;
-    scaleDestRect(&destRect);
-  SDL_RenderCopy(renderer,
-      liftTex,
       NULL,
       &destRect);
     /* Draw bottom base */
@@ -389,6 +398,7 @@ renderSplashScreen()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(railTex);
   SDL_DestroyTexture(hiscoreTex);
   SDL_DestroyTexture(gameOverTex);
   SDL_DestroyTexture(arrowTex);
