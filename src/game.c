@@ -155,9 +155,6 @@ update(float dt)
     case GS_PLAYING:
       generateMissiles();
       updatePositions(dt);
-      //checkCollitions
-      //assignDamages
-      //assignScores
       break;
     case GS_SCORING:
       /*

@@ -7,12 +7,15 @@
 #include "video.h"
 #include "game.h"
 
-AppScene currentAppScene = APPSCENE_MAINMENU;
+#define APPSCENE_INTRO_TIMER 5000.0f
+
+AppScene currentAppScene = APPSCENE_INTRO;
 SDL_Window *window = NULL;
 SDL_Surface *surface = NULL;
 int isGameRunning = 1;
 SDL_Event currentEvent;
 int lastTick = 0;
+float introTimer = 0;
 char currentMenuSelection = 0;
 SDL_RWops *hsFile = NULL;
 // Methods
@@ -100,6 +103,7 @@ main(int argc, char *argv[])
 		switch (currentAppScene)
 		{
 			case APPSCENE_INTRO:
+        introTimer += dt;
 				//Handle events on queue
 				while( SDL_PollEvent( &currentEvent ) != 0 )
 				{
@@ -108,7 +112,14 @@ main(int argc, char *argv[])
 					{
 						isGameRunning = 0;
 					}
+          else if (currentEvent.type == SDL_KEYDOWN)
+          {
+            currentAppScene = APPSCENE_MAINMENU;
+          }
 				}
+        if (introTimer > APPSCENE_INTRO_TIMER)
+          currentAppScene = APPSCENE_MAINMENU;
+        renderIntroScene();
 				break;
 			case APPSCENE_MAINMENU:
         while (SDL_PollEvent( &currentEvent ) != 0)

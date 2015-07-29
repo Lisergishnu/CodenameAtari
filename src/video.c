@@ -138,6 +138,11 @@ loadAssets()
       "img/riel.png");
   ASSERT_IMG(railTex);
 
+  /* Load intro screen */
+  introTex = IMG_LoadTexture(renderer,
+      "img/enactivo.png");
+  ASSERT_IMG(introTex);
+
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
@@ -372,6 +377,18 @@ render()
 
   SDL_RenderPresent(renderer);
 }
+
+void
+renderIntroScene()
+{
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer,
+      introTex,
+      NULL,
+      &splashScreenRect);
+  SDL_RenderPresent(renderer);
+}
+
   void
 renderSplashScreen()
 {
@@ -405,6 +422,7 @@ renderSplashScreen()
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(introTex);
   SDL_DestroyTexture(railTex);
   SDL_DestroyTexture(hiscoreTex);
   SDL_DestroyTexture(gameOverTex);
