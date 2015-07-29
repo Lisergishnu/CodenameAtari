@@ -1,6 +1,7 @@
 build/
 build-win32/
 projectFiles/
+hs.dat
 
 # Created by https://www.gitignore.io
 
