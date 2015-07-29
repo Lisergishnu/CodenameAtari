@@ -6,6 +6,8 @@
 #define __AUDIO_H
 
 #include "sdl.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #define ASSERT_AUDIO(x) if(x==NULL) printf("Couldn't load audio: %s. Reason %s.\n", #x, Mix_GetError());
 
