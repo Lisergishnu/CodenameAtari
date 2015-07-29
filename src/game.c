@@ -176,6 +176,7 @@ update(float dt)
           else
           {
             currentGameState.currentScore += 5;
+            playSound(AC_SCORING);
             displayScoring -= 5;
             startTimer = 0;
           }
@@ -191,6 +192,7 @@ update(float dt)
             else
             {
               currentGameState.currentScore += 5;
+              playSound(AC_SCORING);
               displayScoring -= 5;
               startTimer = 0;
             }
@@ -388,6 +390,7 @@ updatePositions(float dt)
       {
         mi->isAlive = 0;
         currentGameState.currentScore += GAME_SCORE_PER_BLOCK;
+        playSound(AC_HIT);
       }
 
       /* Now check if it has collided with the player rect */

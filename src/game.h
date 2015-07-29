@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include "audio.h"
 
 // Game logic defines
 // Game space 220x192
