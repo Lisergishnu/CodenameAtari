@@ -64,7 +64,7 @@ startNewLevel(int lvl)
     lift.drawSpace.x = LIFT_STARTING_POS_TOP_X;
     lift.drawSpace.y = LIFT_STARTING_POS_TOP_Y;
   }
-  lift.health = 5;
+  lift.health = 3;
   lift.drawSpace.h = 24;
   lift.drawSpace.w = 24;
 	lift.orientation = SP_180;

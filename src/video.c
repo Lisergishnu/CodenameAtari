@@ -69,7 +69,7 @@ loadAssets()
       "img/night.png");
   ASSERT_IMG(gamebkgNightTex);
   liftTex = IMG_LoadTexture(renderer,
-      "res/sprites/ascensor.png");
+      "res/sprites/liftsheet.png");
   ASSERT_IMG(liftTex);
   topBaseTex = IMG_LoadTexture(renderer,
       "res/sprites/casetatop.png");
@@ -288,10 +288,11 @@ render()
   /* Draw lift */
   destRect = lift.drawSpace;
   destRect.x += 100;
-    scaleDestRect(&destRect);
+  SDL_Rect sourceRect = {(3-lift.health)*24,0,24,24};
+  scaleDestRect(&destRect);
   SDL_RenderCopy(renderer,
       liftTex,
-      NULL,
+      &sourceRect,
       &destRect);
   /* Draw top base */
   destRect.x = 100 + currentGameState.topBase.x;
