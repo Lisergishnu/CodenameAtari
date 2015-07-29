@@ -39,6 +39,7 @@ SDL_Texture *arrowTex;
 SDL_Texture *gameOverTex;
 SDL_Texture *hiscoreTex;
 SDL_Texture *introTex;
+SDL_Texture *creditsTex;
 /* Game font */
 TTF_Font *font;
 
@@ -66,6 +67,9 @@ renderSplashScreen();
 
 void
 renderIntroScene();
+
+void
+renderCredits();
 
 void
 render();

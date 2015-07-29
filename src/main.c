@@ -138,6 +138,9 @@ main(int argc, char *argv[])
           {
             switch(currentEvent.key.keysym.sym)
             {
+              case SDLK_F1:
+                currentAppScene = APPSCENE_CREDITS;
+                break;
               case SDLK_RIGHT:
               case SDLK_DOWN:
               case SDLK_LEFT:
@@ -173,7 +176,19 @@ main(int argc, char *argv[])
         update(dt);
         render();
         break;
-      case APPSCENE_GAMEOVER:
+      case APPSCENE_CREDITS:
+        while( SDL_PollEvent( &currentEvent ) != 0 )
+        {
+          if( currentEvent.type == SDL_QUIT )
+          {
+            isGameRunning = 0;
+          }
+          else if (currentEvent.type == SDL_KEYDOWN)
+          {
+            currentAppScene = APPSCENE_MAINMENU;
+          }
+        }
+        renderCredits();
         break;
     }
   }

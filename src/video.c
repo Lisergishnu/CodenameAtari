@@ -143,6 +143,11 @@ loadAssets()
       "img/enactivo.png");
   ASSERT_IMG(introTex);
 
+  /* Load credit screen */
+  creditsTex = IMG_LoadTexture(renderer,
+      "img/credits.png");
+  ASSERT_IMG(creditsTex);
+
   font = TTF_OpenFont( "font/Beeb.ttf",16);
   if (font == NULL)
     printf("Couldn't load game font!\n");
@@ -418,10 +423,22 @@ renderSplashScreen()
   SDL_RenderPresent(renderer);
 }
 
+void
+renderCredits()
+{
+  SDL_RenderClear(renderer);
+  SDL_RenderCopy(renderer,
+      creditsTex,
+      NULL,
+      &splashScreenRect);
+  SDL_RenderPresent(renderer);
+}
+
   void
 cleanUpVideo()
 {
   TTF_CloseFont(font);
+  SDL_DestroyTexture(creditsTex);
   SDL_DestroyTexture(introTex);
   SDL_DestroyTexture(railTex);
   SDL_DestroyTexture(hiscoreTex);
