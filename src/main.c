@@ -14,6 +14,7 @@ int isGameRunning = 1;
 SDL_Event currentEvent;
 int lastTick = 0;
 char currentMenuSelection = 0;
+SDL_RWops *hsFile = NULL;
 // Methods
 void
 init()
@@ -42,11 +43,41 @@ init()
 			initVideo();
 		}
 	}
+   /*
+    * Load the current high score. If there is none,
+    * create a new file for it
+    */
+   hsFile = SDL_RWFromFile("hs.dat","r+b");
+   if (hsFile == NULL)
+   {
+     hsFile = SDL_RWFromFile("hs.dat","w+b");
+     if (hsFile == NULL)
+     {
+       printf("Error: Couldn't create high score file!!\n");
+       exit(-1);
+     }
+     highScore = 0;
+     SDL_RWwrite(hsFile, &highScore,
+         sizeof(highScore), 1);
+     SDL_RWclose(hsFile);
+   }
+   else
+   {
+     SDL_RWread(hsFile, &highScore,
+         sizeof(highScore), 1);
+     SDL_RWclose(hsFile);
+   }
 }
 
 void
 shutdown()
 {
+  /* Write highscore */
+  hsFile = SDL_RWFromFile("hs.dat","w+b");
+  SDL_RWwrite(hsFile, &highScore,
+      sizeof(highScore), 1);
+  SDL_RWclose(hsFile);
+
   cleanUpVideo();
   cleanGameLogic();
 	//Destroy window
