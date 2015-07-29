@@ -4,11 +4,10 @@
 #define LIFT_STARTING_POS_TOP_Y 36
 #define LIFT_STARTING_POS_BOT_X 189
 #define LIFT_STARTING_POS_BOT_Y 166
-#define LIFT_SPEED .1f
 #define MISSILE_SPEED 0.1f
 #define GAME_SCORE_PER_BLOCK 1.0f
 #define GS_READY_SCREEN_TIMER 2500.0f
-#define GAME_MS_PER_PIXEL 50.0f
+#define GAME_MS_PER_LIFT_MOVEMENT 500.0f
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
@@ -38,7 +37,7 @@ startNewLevel(int lvl)
 	currentGameState.botBase.y = 168;
 	currentGameState.onScreenMissileCount = 10;
   currentGameState.currentGameScene = GS_START;
-  currentGameState.peopleRescued = 10;
+  currentGameState.peopleRescued = 2 + lvl*0.34;
 
   startTimer = 0;
   /*
@@ -83,7 +82,7 @@ generateMissiles()
   if (currentGameState.onScreenMissileCount <
       MAX_MISSILE_COUNT)
   {
-    int chance = rand() % 100;
+    int chance = rand() % 10000;
     if (chance <= levelMissileProbThreshold)
     {
       int m = 0;
@@ -314,7 +313,7 @@ updatePositions(float dt)
    * the scoring phase.
    */
   static float liftMovementTimer = 0.0f;
-  if (liftMovementTimer >= GAME_MS_PER_PIXEL)
+  if (liftMovementTimer >= GAME_MS_PER_LIFT_MOVEMENT)
   {
     if (isGoingUphill)
     {
