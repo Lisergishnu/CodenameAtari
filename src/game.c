@@ -12,7 +12,7 @@
 #define GAME_SCORE_PER_PERSON 20
 #define GS_SCORING_MS_PER_TICK 50.0f
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
-#define GS_GAMEOVER_MS_BEFORE_MAINMENU 2000.0f
+#define GS_GAMEOVER_MS_BEFORE_MAINMENU 5000.0f
 
 float startTimer;
 char isGoingUphill;
@@ -384,10 +384,10 @@ updatePositions(float dt)
           {
             highScore = currentGameState.currentScore;
             isNewHighScore = 1;
-
           }
           startTimer = 0;
         }
+        mi->isAlive = 0;
       }
 
       /*
