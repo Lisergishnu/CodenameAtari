@@ -1,8 +1,8 @@
-VERSION=v0.9
+VERSION=v1.0
 C = gcc
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer -framework CoreFoundation
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
-CFLAGS = -Wall -g
+CFLAGS = -Wall -o2
 LDFLAGS = $(SDL)
 SOURCE = src/*.c
 EXE = ElevatorRescue
