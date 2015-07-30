@@ -311,7 +311,7 @@ render()
   SDL_RenderClear(renderer);
   /*Draw background, morning, day or night depending
    * on level */
-  SDL_Texture* currentBKG;
+  SDL_Texture* currentBKG = NULL;
   switch((currentGameState.currentLevel - 1)%3)
   {
     case 0:

@@ -1,6 +1,6 @@
 VERSION=v0.8
 C = gcc
-SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer
+SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer -framework CoreFoundation
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
 CFLAGS = -Wall -g
 LDFLAGS = $(SDL)
@@ -20,10 +20,12 @@ all:
 	$(C) $(CFLAGS) $(SDL) $(SOURCE) -o build/$(EXE)
 	mv build/$(EXE) build/$(EXE).app/Contents/MacOS
 	cp etc/Info.plist build/$(EXE).app/Contents/
-	cp -r img build/$(EXE).app/Contents/MacOS
-	cp -r res build/$(EXE).app/Contents/MacOS
-	cp -r font build/$(EXE).app/Contents/MacOS
-	cp -r snd build/$(EXE).app/Contents/MacOS
+	mkdir -p build/$(EXE).app/Contents/Resources
+	cp -r img build/$(EXE).app/Contents/Resources
+	cp -r res build/$(EXE).app/Contents/Resources
+	cp -r font build/$(EXE).app/Contents/Resources
+	cp -r snd build/$(EXE).app/Contents/Resources
+	cp -rf /Library/Frameworks/SDL2*.framework build/$(EXE).app/Contents/Resources
 win32: 
 	mkdir -p build-win32
 	$(WIN32C) $(WIN32CFLAGS) $(CFLAGS) $(SOURCE) $(WIN32LDFLAGS) -o build-win32/$(WIN32EXE)

@@ -23,6 +23,15 @@ SDL_RWops *hsFile = NULL;
   void
 init()
 {
+#ifdef __APPLE__
+char path[PATH_MAX];
+CFURLRef res = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+CFURLGetFileSystemRepresentation(res, TRUE, (UInt8 *)path, PATH_MAX);
+CFRelease(res);
+chdir(path);
+#endif
+
+
   if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
   {
     printf( "SDL could not initialize! SDL_Error: %s\n", 
@@ -75,7 +84,7 @@ init()
 }
 
   void
-shutdown()
+shutdownGame()
 {
   /* Write highscore */
   hsFile = SDL_RWFromFile("hs.dat","w+b");
@@ -192,6 +201,6 @@ main(int argc, char *argv[])
         break;
     }
   }
-  shutdown();
+  shutdownGame();
   return 0;
 }
