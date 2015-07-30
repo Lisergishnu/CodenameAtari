@@ -20,6 +20,18 @@ int lastTick = 0;
 float introTimer = 0;
 char currentMenuSelection = 0;
 SDL_RWops *hsFile = NULL;
+char *pref_path = NULL;
+    char hsStrPath[256];
+
+void InitializePrefPath() {
+    char *base_path = SDL_GetPrefPath("Enactivo", "Elevator Rescue");
+    if (base_path) {
+        pref_path = base_path;
+        printf("Using pref path: %s\n",pref_path);
+    } else {
+        printf("Error: Couldn't find preference path.\n");
+    }
+}
 
 // Methods
 static void SetSDLIcon(SDL_Window* window)
@@ -40,195 +52,198 @@ static void SetSDLIcon(SDL_Window* window)
     amask = (er_icon.bytes_per_pixel == 3) ? 0 : 0xff000000;
 #endif
     SDL_Surface* icon = SDL_CreateRGBSurfaceFrom((void*)er_icon.pixel_data, er_icon.width,
-    er_icon.height, er_icon.bytes_per_pixel*8, er_icon.bytes_per_pixel*er_icon.width,
-    rmask, gmask, bmask, amask);
-        SDL_SetWindowIcon(window, icon);
- 
+                        er_icon.height, er_icon.bytes_per_pixel*8, er_icon.bytes_per_pixel*er_icon.width,
+                        rmask, gmask, bmask, amask);
+    SDL_SetWindowIcon(window, icon);
+
     SDL_FreeSurface(icon);
 }
 
-  void
+void
 init()
 {
 #ifdef __APPLE__
-char path[PATH_MAX];
-CFURLRef res = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
-CFURLGetFileSystemRepresentation(res, TRUE, (UInt8 *)path, PATH_MAX);
-CFRelease(res);
-chdir(path);
+    char path[PATH_MAX];
+    CFURLRef res = CFBundleCopyResourcesDirectoryURL(CFBundleGetMainBundle());
+    CFURLGetFileSystemRepresentation(res, TRUE, (UInt8 *)path, PATH_MAX);
+    CFRelease(res);
+    chdir(path);
 #endif
 
 
-  if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
-  {
-    printf( "SDL could not initialize! SDL_Error: %s\n", 
-        SDL_GetError() );
-    exit(-1);
-  }
-  else
-  {
-    //Create window
-    window = SDL_CreateWindow( "Elevator Rescue",
-        SDL_WINDOWPOS_CENTERED, 
-        SDL_WINDOWPOS_CENTERED, 
-        320*SCALING_FACTOR, 
-        192*SCALING_FACTOR, 
-        SDL_WINDOW_SHOWN );
-    if( window == NULL )
-    {
-      printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-    }
+    if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
+        {
+            printf( "SDL could not initialize! SDL_Error: %s\n",
+                    SDL_GetError() );
+            exit(-1);
+        }
     else
-    {
-    	SetSDLIcon(window);
-      initVideo();
-      initAudio();
-    }
-  }
-  /*
-   * Load the current high score. If there is none,
-   * create a new file for it
-   */
-  hsFile = SDL_RWFromFile("hs.dat","r+b");
-  if (hsFile == NULL)
-  {
-    hsFile = SDL_RWFromFile("hs.dat","w+b");
+        {
+            //Create window
+            window = SDL_CreateWindow( "Elevator Rescue",
+                                       SDL_WINDOWPOS_CENTERED,
+                                       SDL_WINDOWPOS_CENTERED,
+                                       320*SCALING_FACTOR,
+                                       192*SCALING_FACTOR,
+                                       SDL_WINDOW_SHOWN );
+            if( window == NULL )
+                {
+                    printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+                }
+            else
+                {
+                    SetSDLIcon(window);
+                    initVideo();
+                    initAudio();
+                }
+        }
+    /*
+     * Load the current high score. If there is none,
+     * create a new file for it
+     */
+     InitializePrefPath();
+    strcat(hsStrPath, pref_path);
+    strcat(hsStrPath, "hs.dat");
+    hsFile = SDL_RWFromFile(hsStrPath,"r+b");
     if (hsFile == NULL)
-    {
-      printf("Error: Couldn't create high score file!!\n");
-      exit(-1);
-    }
-    highScore = 0;
-    SDL_RWwrite(hsFile, &highScore,
-        sizeof(highScore), 1);
-    SDL_RWclose(hsFile);
-  }
-  else
-  {
-    SDL_RWread(hsFile, &highScore,
-        sizeof(highScore), 1);
-    SDL_RWclose(hsFile);
-  }
+        {
+            hsFile = SDL_RWFromFile(hsStrPath,"w+b");
+            if (hsFile == NULL)
+                {
+                    printf("Error: Couldn't create high score file!!\n");
+                    exit(-1);
+                }
+            highScore = 0;
+            SDL_RWwrite(hsFile, &highScore,
+                        sizeof(highScore), 1);
+            SDL_RWclose(hsFile);
+        }
+    else
+        {
+            SDL_RWread(hsFile, &highScore,
+                       sizeof(highScore), 1);
+            SDL_RWclose(hsFile);
+        }
 }
 
-  void
+void
 shutdownGame()
 {
-  /* Write highscore */
-  hsFile = SDL_RWFromFile("hs.dat","w+b");
-  SDL_RWwrite(hsFile, &highScore,
-      sizeof(highScore), 1);
-  SDL_RWclose(hsFile);
+    /* Write highscore */
+    hsFile = SDL_RWFromFile(hsStrPath,"w+b");
+    SDL_RWwrite(hsFile, &highScore,
+                sizeof(highScore), 1);
+    SDL_RWclose(hsFile);
 
-  cleanupAudio();
-  cleanUpVideo();
-  cleanGameLogic();
-  //Destroy window
-  SDL_DestroyWindow( window );
+    cleanupAudio();
+    cleanUpVideo();
+    cleanGameLogic();
+    //Destroy window
+    SDL_DestroyWindow( window );
 
-  //Quit SDL subsystems
-  SDL_Quit();
-  printf("Shuting down...\n");
+    //Quit SDL subsystems
+    SDL_Quit();
+    printf("Shuting down...\n");
 }
 
-  int
+int
 main(int argc, char *argv[])
 {
-  init();
-  loadAssets();
-  loadAudioClips();
-  playSound(AC_THEME);
-  while (isGameRunning)
-  {
-    int thisTick = SDL_GetTicks();
-    float dt = (float) (thisTick - lastTick);
-    lastTick = thisTick;
-    switch (currentAppScene)
-    {
-      case APPSCENE_INTRO:
-        introTimer += dt;
-        //Handle events on queue
-        while( SDL_PollEvent( &currentEvent ) != 0 )
+    init();
+    loadAssets();
+    loadAudioClips();
+    playSound(AC_THEME);
+    while (isGameRunning)
         {
-          //User requests quit
-          if( currentEvent.type == SDL_QUIT )
-          {
-            isGameRunning = 0;
-          }
-          else if (currentEvent.type == SDL_KEYDOWN)
-          {
-            currentAppScene = APPSCENE_MAINMENU;
-          }
-        }
-        if (introTimer > APPSCENE_INTRO_TIMER)
-          currentAppScene = APPSCENE_MAINMENU;
-        renderIntroScene();
-        break;
-      case APPSCENE_MAINMENU:
-        while (SDL_PollEvent( &currentEvent ) != 0)
-        {
-          if (currentEvent.type == SDL_QUIT)
-          {
-            isGameRunning = 0;
-          }
-          else if (currentEvent.type == SDL_KEYDOWN)
-          {
-            switch(currentEvent.key.keysym.sym)
-            {
-              case SDLK_F1:
-                currentAppScene = APPSCENE_CREDITS;
-                break;
-              case SDLK_RIGHT:
-              case SDLK_DOWN:
-              case SDLK_LEFT:
-              case SDLK_UP:
-                playSound(AC_MENU);
-                currentMenuSelection = (currentMenuSelection == 0) ?1:0;
-                break;
-              case SDLK_RETURN:
-                if (currentMenuSelection == 0)
+            int thisTick = SDL_GetTicks();
+            float dt = (float) (thisTick - lastTick);
+            lastTick = thisTick;
+            switch (currentAppScene)
                 {
-                  currentAppScene = APPSCENE_GAMEPLAY;
-                  initGameLogic();
+                case APPSCENE_INTRO:
+                    introTimer += dt;
+                    //Handle events on queue
+                    while( SDL_PollEvent( &currentEvent ) != 0 )
+                        {
+                            //User requests quit
+                            if( currentEvent.type == SDL_QUIT )
+                                {
+                                    isGameRunning = 0;
+                                }
+                            else if (currentEvent.type == SDL_KEYDOWN)
+                                {
+                                    currentAppScene = APPSCENE_MAINMENU;
+                                }
+                        }
+                    if (introTimer > APPSCENE_INTRO_TIMER)
+                        currentAppScene = APPSCENE_MAINMENU;
+                    renderIntroScene();
+                    break;
+                case APPSCENE_MAINMENU:
+                    while (SDL_PollEvent( &currentEvent ) != 0)
+                        {
+                            if (currentEvent.type == SDL_QUIT)
+                                {
+                                    isGameRunning = 0;
+                                }
+                            else if (currentEvent.type == SDL_KEYDOWN)
+                                {
+                                    switch(currentEvent.key.keysym.sym)
+                                        {
+                                        case SDLK_F1:
+                                            currentAppScene = APPSCENE_CREDITS;
+                                            break;
+                                        case SDLK_RIGHT:
+                                        case SDLK_DOWN:
+                                        case SDLK_LEFT:
+                                        case SDLK_UP:
+                                            playSound(AC_MENU);
+                                            currentMenuSelection = (currentMenuSelection == 0) ?1:0;
+                                            break;
+                                        case SDLK_RETURN:
+                                            if (currentMenuSelection == 0)
+                                                {
+                                                    currentAppScene = APPSCENE_GAMEPLAY;
+                                                    initGameLogic();
+                                                }
+                                            else
+                                                isGameRunning = 0;
+                                            break;
+                                        }
+                                }
+                        }
+                    renderSplashScreen();
+                    break;
+                case APPSCENE_GAMEPLAY:
+                    //Handle events on queue
+                    while( SDL_PollEvent( &currentEvent ) != 0 )
+                        {
+                            //User requests quit
+                            if( currentEvent.type == SDL_QUIT )
+                                {
+                                    isGameRunning = 0;
+                                }
+                        }
+                    handleGameInput(currentEvent);
+                    update(dt);
+                    render();
+                    break;
+                case APPSCENE_CREDITS:
+                    while( SDL_PollEvent( &currentEvent ) != 0 )
+                        {
+                            if( currentEvent.type == SDL_QUIT )
+                                {
+                                    isGameRunning = 0;
+                                }
+                            else if (currentEvent.type == SDL_KEYDOWN)
+                                {
+                                    currentAppScene = APPSCENE_MAINMENU;
+                                }
+                        }
+                    renderCredits();
+                    break;
                 }
-                else
-                  isGameRunning = 0;
-                break;
-            }
-          }
         }
-        renderSplashScreen();
-        break;
-      case APPSCENE_GAMEPLAY:
-        //Handle events on queue
-        while( SDL_PollEvent( &currentEvent ) != 0 )
-        {
-          //User requests quit
-          if( currentEvent.type == SDL_QUIT )
-          {
-            isGameRunning = 0;
-          }
-        }
-        handleGameInput(currentEvent);
-        update(dt);
-        render();
-        break;
-      case APPSCENE_CREDITS:
-        while( SDL_PollEvent( &currentEvent ) != 0 )
-        {
-          if( currentEvent.type == SDL_QUIT )
-          {
-            isGameRunning = 0;
-          }
-          else if (currentEvent.type == SDL_KEYDOWN)
-          {
-            currentAppScene = APPSCENE_MAINMENU;
-          }
-        }
-        renderCredits();
-        break;
-    }
-  }
-  shutdownGame();
-  return 0;
+    shutdownGame();
+    return 0;
 }

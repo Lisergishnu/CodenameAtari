@@ -14,14 +14,14 @@
 typedef
 enum __audioclip
 {
-  AC_THEME,
-  AC_HIT,
-  AC_MENU,
-  AC_SCORING,
-  AC_LOSS_HEALTH,
-  AC_CLIMB,
-  AC_POWERUP,
-  AC_BREAKDOWN
+    AC_THEME,
+    AC_HIT,
+    AC_MENU,
+    AC_SCORING,
+    AC_LOSS_HEALTH,
+    AC_CLIMB,
+    AC_POWERUP,
+    AC_BREAKDOWN
 } AudioClip;
 
 void

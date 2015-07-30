@@ -33,110 +33,110 @@
 typedef
 struct _vectors
 {
-	int x;
-	int y;
+    int x;
+    int y;
 } Vector;
 
 typedef
 struct _fvec
 {
-  float x;
-  float y;
+    float x;
+    float y;
 } FVector;
 
 // Orientaciones generales
 typedef
 enum _defPos
 {
-	SP_0,
-	SP_45,
-	SP_90,
-	SP_135,
-	SP_180,
-	SP_225,
-	SP_270,
-	SP_315
+    SP_0,
+    SP_45,
+    SP_90,
+    SP_135,
+    SP_180,
+    SP_225,
+    SP_270,
+    SP_315
 } Orientation;
 
 typedef
 struct __missile
 {
-	int isAlive;
-	FVector position;
-  double angle;
+    int isAlive;
+    FVector position;
+    double angle;
 } Missile;
 
 typedef
 enum __poweruptype
 {
-  PT_REPAIR,
-  PT_ULTIMATE
+    PT_REPAIR,
+    PT_ULTIMATE
 } PowerupType;
 
 typedef
 struct __powerups
 {
-  int isAlive;
-  PowerupType type;
-  FVector position;
-  double angle;
+    int isAlive;
+    PowerupType type;
+    FVector position;
+    double angle;
 } Powerup;
 
 typedef
 enum __gamescene
 {
-	GS_START,
-	GS_PLAYING,
-	GS_SCORING,
-	GS_GAMEOVER
+    GS_START,
+    GS_PLAYING,
+    GS_SCORING,
+    GS_GAMEOVER
 } GameScene;
 
 /* The whole game state is contained in this struct */
 typedef
 struct __gamestates
 {
-	// Level
-	char currentLevel;
-	int onScreenMissileCount;
-	// Score
-	int currentScore;
-	int peopleRescued;
+    // Level
+    char currentLevel;
+    int onScreenMissileCount;
+    // Score
+    int currentScore;
+    int peopleRescued;
 
-	Missile missileList[MAX_MISSILE_COUNT];
-  Powerup onScreenPowerup;
-	Vector botBase;
-	Vector topBase;
-	Vector liftPosition;
-	GameScene currentGameScene;
+    Missile missileList[MAX_MISSILE_COUNT];
+    Powerup onScreenPowerup;
+    Vector botBase;
+    Vector topBase;
+    Vector liftPosition;
+    GameScene currentGameScene;
 } GameState;
 
 typedef
 struct __base
 {
-	SDL_Rect drawSpace;
-	Vector position;
+    SDL_Rect drawSpace;
+    Vector position;
 } Base;
 
 /* Player Stuff */
 typedef
 struct __lift
 {
-	int health;
+    int health;
 
-	SDL_Rect drawSpace;
+    SDL_Rect drawSpace;
 
-	Orientation orientation; //Shield orientation?
-	Vector position;
+    Orientation orientation; //Shield orientation?
+    Vector position;
 } Lift;
 
 typedef
 enum
 appscenes
 {
-	APPSCENE_INTRO,
-	APPSCENE_MAINMENU,
-	APPSCENE_GAMEPLAY,
-	APPSCENE_CREDITS
+    APPSCENE_INTRO,
+    APPSCENE_MAINMENU,
+    APPSCENE_GAMEPLAY,
+    APPSCENE_CREDITS
 } AppScene;
 
 // Global Variables

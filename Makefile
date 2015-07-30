@@ -1,4 +1,4 @@
-VERSION=v1.0
+VERSION=v1.1
 C = gcc
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer -framework CoreFoundation
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
