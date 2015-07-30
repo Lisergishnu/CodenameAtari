@@ -1,4 +1,4 @@
-VERSION=v0.8
+VERSION=v0.9
 C = gcc
 SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_mixer -framework CoreFoundation
 # If your compiler is a bit older you may need to change -std=c++11 to -std=c++0x
@@ -25,6 +25,7 @@ all:
 	cp -r res build/$(EXE).app/Contents/Resources
 	cp -r font build/$(EXE).app/Contents/Resources
 	cp -r snd build/$(EXE).app/Contents/Resources
+	cp -r etc/er.icns build/$(EXE).app/Contents/Resources
 	cp -rf /Library/Frameworks/SDL2*.framework build/$(EXE).app/Contents/Resources
 win32: 
 	mkdir -p build-win32

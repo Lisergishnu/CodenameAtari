@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIconFile</key>
+	<string>er.icns</string>
+	<key>UIRequiresPersistentWiFi</key>
+	<false/>
 	<key>CFBundleGetInfoString</key>
 	<string>Elevator Rescue</string>
 	<key>CFBundleExecutable</key>
@@ -11,7 +15,7 @@
 	<key>CFBundleName</key>
 	<string>Elevator Rescue</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8</string>
+	<string>0.9</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
