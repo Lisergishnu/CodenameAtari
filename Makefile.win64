@@ -1,0 +1,35 @@
+PLATAFORM=win64
+# WIN32 compilation flags
+SDL_ROOT_DIR = /usr/local/SDL2-mingw/x86_64-w64-mingw32
+WIN32C = /usr/local/mingw/bin/x86_64-w64-mingw32-gcc
+WIN32CFLAGS = `$(SDL_ROOT_DIR)/bin/sdl2-config --cflags`
+WIN32LDFLAGS = `$(SDL_ROOT_DIR)/bin/sdl2-config --libs` \
+							 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -static-libgcc -static-libstdc++
+WIN32EXE = $(EXE).exe
+ODIR=obj-$(PLATAFORM)
+BDIR=build-$(PLATAFORM)
+SDIR=src
+_DEPS= main.c audio.c game.c video.c
+DEPS = $(patsubst %,$(SDIR)/%,$(_DEPS))
+_OBJ= main.o audio.o game.o video.o
+OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
+MKDIR=@mkdir -p $(@D)
+
+$(ODIR)/%.o: $(DEPS)
+	$(MKDIR)
+	$(WIN32C) -c -o $@ $< $(WIN32CFLAGS)
+
+all: $(OBJ)
+	$(WIN32C) $(WIN32CFLAGS) $^  $(WIN32LDFLAGS) -o build-$(PLATAFORM)/$(WIN32EXE)
+
+win64:
+	mkdir -p build-$(PLATAFORM)
+	$(WIN32C) $(WIN32CFLAGS) $(CFLAGS) $(SOURCE) $(WIN32LDFLAGS) -o build-$(PLATAFORM)/$(WIN32EXE)
+	cp bin/*.dll build-$(PLATAFORM)/
+	cp -r img build-$(PLATAFORM)/
+	cp -r res build-$(PLATAFORM)/
+	cp -r font build-$(PLATAFORM)/
+	cp -r snd build-$(PLATAFORM)/
+	rm -f build-$(PLATAFORM)/$(EXE)-$(VERSION).zip
+	zip -r $(EXE)-$(VERSION).zip build-$(PLATAFORM)/*
+	mv $(EXE)-$(PLATAFORM)-$(VERSION).zip build-$(PLATAFORM)/

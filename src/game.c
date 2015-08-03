@@ -18,6 +18,11 @@
 #define GS_SCORING_MS_BEFORE_NEXT_LEVEL 1000.0f
 #define GS_GAMEOVER_MS_BEFORE_MAINMENU 5000.0f
 
+// Global Variables
+GameState currentGameState;
+Lift lift;
+int highScore;
+int isNewHighScore;
 float startTimer;
 char isGoingUphill;
 int displayScoring = 0;
@@ -29,7 +34,7 @@ char liftCurrentlyStalled = 0;
 void
 initGameLogic()
 {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
     currentGameState.currentScore = 0;
     startNewLevel(1);
 }
@@ -415,7 +420,7 @@ updateLiftPosition(float dt)
             if (liftStopTimer >= GAME_MS_PER_STOP)
                 {
                     char prob = rand() % 100;
-                    if (prob < 6*currentGameState.currentLevel)
+                    if (prob < currentGameState.currentLevel)
                         {
                             liftCurrentlyStalled = 1;
                             playSound(AC_BREAKDOWN);

@@ -139,11 +139,6 @@ appscenes
     APPSCENE_CREDITS
 } AppScene;
 
-// Global Variables
-GameState currentGameState;
-Lift lift;
-int highScore;
-int isNewHighScore;
 // Methods
 
 void

@@ -22,6 +22,7 @@ char currentMenuSelection = 0;
 SDL_RWops *hsFile = NULL;
 char *pref_path = NULL;
     char hsStrPath[256];
+extern int highScore;
 
 void InitializePrefPath() {
     char *base_path = SDL_GetPrefPath("Enactivo", "Elevator Rescue");
