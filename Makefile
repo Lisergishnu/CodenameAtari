@@ -5,6 +5,7 @@ SDL = -framework SDL2 -framework SDL2_image -framework SDL2_ttf -framework SDL2_
 CFLAGS = -Wall -o2
 LDFLAGS = $(SDL)
 SOURCE = src/*.c
+SOURCESLINUX = src/audio.c src/video.c src/game.c src/main.c
 EXE = ElevatorRescue
 OBJECTS = main.o video.o game.o
 # WIN32 compilation flags
@@ -14,6 +15,7 @@ WIN32CFLAGS = `$(SDL_ROOT_DIR)/bin/sdl2-config --cflags`
 WIN32LDFLAGS = `$(SDL_ROOT_DIR)/bin/sdl2-config --libs` \
 							 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -static-libgcc -static-libstdc++
 WIN32EXE = $(EXE).exe
+LINUXLINK = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 all:	
 	@mkdir -p build/$(EXE).app/Contents/MacOS
@@ -28,7 +30,7 @@ all:
 	@cp -r etc/er.icns build/$(EXE).app/Contents/Resources
 	@cp -rf /Library/Frameworks/SDL2*.framework build/$(EXE).app/Contents/Resources
 
-win32: 
+win32:
 	@mkdir -p build-win32
 	@$(WIN32C) $(WIN32CFLAGS) $(CFLAGS) $(SOURCE) $(WIN32LDFLAGS) -o build-win32/$(WIN32EXE)
 	@cp bin/*.dll build-win32/
@@ -37,6 +39,10 @@ win32:
 	@cp -r font build-win32/
 	@cp -r snd build-win32/
 	@cd build-win32/; rm -f $(EXE)-$(VERSION).zip; zip -r $(EXE)-$(VERSION).zip *
+
+linux:
+	g++ $(SOURCESLINUX) --std=c++11 -w $(LINUXLINK) -o build/$(EXE)
+
 run:
 	build/$(EXE).app/Contents/MacOS/$(EXE)
 clean:
